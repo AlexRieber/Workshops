@@ -1,0 +1,128 @@
+/*-- scss:defaults --*/
+
+$font-family-sans-serif: "Inter", "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+$font-family-monospace: "Fira Code", "JetBrains Mono", "Cascadia Code", monospace;
+
+$presentation-heading-font: "Inter", "Segoe UI", Roboto, sans-serif;
+$presentation-heading-color: #2D3748;
+
+$body-color: #4A5568;
+$link-color: #4299E1;
+
+$code-block-bg: #1A202C;
+$code-block-font-size: 0.7em;
+$code-color: #ED8936;
+
+/* Tighter base font for more content per slide */
+$presentation-font-size-root: 36px;
+
+/*-- scss:rules --*/
+
+.reveal h1 {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.reveal h2 {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  border-bottom: 3px solid #4299E1;
+  padding-bottom: 6px;
+  margin-bottom: 16px;
+}
+
+.reveal h3 {
+  font-weight: 600;
+  font-size: 1.05em;
+}
+
+/* Section title slides */
+.reveal section[data-background-color="#2D3748"] h1 {
+  color: white;
+  font-size: 2.2em;
+  text-shadow: none;
+  border-bottom: none;
+}
+
+/* Callout boxes */
+.reveal .callout {
+  font-size: 0.8em;
+  border-radius: 8px;
+}
+
+/* Code blocks — compact */
+.reveal pre {
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  margin: 8px 0;
+}
+
+.reveal pre code {
+  padding: 14px;
+  line-height: 1.4;
+  max-height: 380px;
+}
+
+/* Tables — compact */
+.reveal table {
+  font-size: 0.78em;
+  border-collapse: collapse;
+  margin: 8px auto;
+}
+
+.reveal table th {
+  background: #EDF2F7;
+  color: #2D3748;
+  font-weight: 600;
+  padding: 6px 14px;
+}
+
+.reveal table td {
+  padding: 5px 14px;
+  border-bottom: 1px solid #E2E8F0;
+}
+
+/* Lists — compact */
+.reveal ul, .reveal ol {
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+
+.reveal li {
+  margin-bottom: 2px;
+  line-height: 1.4;
+}
+
+/* Paragraphs — compact */
+.reveal p {
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+
+/* Incremental — no extra spacing */
+.reveal .incremental li {
+  padding: 2px 0;
+}
+
+/* Panel tabset styling */
+.reveal .panel-tabset .nav-link {
+  font-size: 0.8em;
+  font-weight: 500;
+}
+
+/* Footer */
+.reveal .footer {
+  font-size: 0.55em;
+  color: #A0AEC0;
+}
+
+/* Smaller text variant */
+.reveal .smaller {
+  font-size: 0.82em;
+}
+
+/* Ensure content stays within slide bounds */
+.reveal .slide-content {
+  max-height: 100%;
+  overflow: hidden;
+}
