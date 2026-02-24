@@ -14,21 +14,6 @@ format:
     highlight-style: github-dark
     code-overflow: wrap
     link-external-newwindow: true
-  pdf:
-    documentclass: article
-    papersize: a4
-    geometry:
-      - margin=2.4cm
-    pdf-engine: xelatex
-    include-in-header: agent-preamble.tex
-    toc: true
-    toc-depth: 3
-    number-sections: true
-    highlight-style: github-dark
-    code-overflow: wrap
-    colorlinks: true
-    linkcolor: "agentblue"
-    urlcolor: "agentblue"
 ---
 
 ::: {.callout-note appearance="simple"}
