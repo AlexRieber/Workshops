@@ -1,0 +1,12 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "Docker Tutorial"
+  navbar:
+    left:
+      - text: Tutorial
+        href: tutorial.qmd
+      - text: Slides
+        href: slides.qmd

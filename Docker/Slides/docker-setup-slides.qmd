@@ -1,0 +1,863 @@
+---
+title: "Docker for AI Coding Agents"
+subtitle: "A Beginner's Guide to Safe, Reproducible Environments"
+author: "Alexander Rieber ([@AlexRieber](https://github.com/AlexRieber)) · Ulm University"
+date: "2026-02-25"
+format:
+  revealjs:
+    theme: [default, custom-docker.scss]
+    slide-number: true
+    preview-links: auto
+    transition: slide
+    highlight-style: github-dark
+    code-line-numbers: false
+    code-overflow: wrap
+    footer: "Docker Setup Workshop"
+    width: 1280
+    height: 720
+    margin: 0.08
+    center: true
+    embed-resources: true
+    fig-align: center
+    scrollable: false
+execute:
+  echo: true
+  eval: false
+---
+
+## Workshop Overview
+
+| Part | Topic | Time |
+|------|-------|------|
+| 🐳 | What is Docker? Why a Sandbox? | 10 min |
+| 💻 | Installing Docker Desktop | 10 min |
+| 📦 | Building Your First Image | 15 min |
+| 🏃 | Running Containers & Volumes | 15 min |
+| 🤖 | Setting Up Claude Code, Codex & Gemini CLI | 15 min |
+| 🔒 | Safety: Partitions & Disk Limits | 10 min |
+| 🛠️ | Hands-On: Run Your First Agent | 15 min |
+
+Companion handout: **Docker Setup Guide for AI Coding Agents**
+
+
+# Part 1: What is Docker? {background-color="#2D3748"}
+
+
+## AI Agents Need to Run Code
+
+An AI coding agent is **not** just a chatbot. It can:
+
+- **Read & write** any file it can access
+- **Run** arbitrary shell commands
+- **Download** data from the internet
+- **Install** software packages
+
+. . .
+
+Would you let a stranger do all this on **your personal laptop?**
+
+
+## The Solution: A Sandbox
+
+```{=html}
+<div style="display: flex; justify-content: center; gap: 50px; align-items: center; margin-top: 20px;">
+
+<div style="background: #FFF5F5; border: 3px solid #FC8181; border-radius: 16px; padding: 25px 30px; width: 340px; text-align: center;">
+<div style="font-size: 2em; margin-bottom: 8px;">😰</div>
+<h3 style="margin: 0 0 8px 0; color: #9B2C2C; font-size: 0.85em;">Without Docker</h3>
+<p style="color: #4A5568; font-size: 0.65em; margin: 0;">Agent runs on your system.<br/>Can access everything.<br/>Mistakes affect YOU.</p>
+</div>
+
+<div style="font-size: 2em; color: #A0AEC0;">→</div>
+
+<div style="background: #F0FFF4; border: 3px solid #48BB78; border-radius: 16px; padding: 25px 30px; width: 340px; text-align: center;">
+<div style="font-size: 2em; margin-bottom: 8px;">😌</div>
+<h3 style="margin: 0 0 8px 0; color: #276749; font-size: 0.85em;">With Docker</h3>
+<p style="color: #4A5568; font-size: 0.65em; margin: 0;">Agent runs in a container.<br/>Cannot escape the sandbox.<br/>Your system stays safe.</p>
+</div>
+
+</div>
+```
+
+**Docker** = an isolated mini-computer inside your real computer.
+
+
+## Three Concepts You Need
+
+```{=html}
+<div style="display: flex; flex-direction: column; align-items: center; gap: 8px; margin-top: 10px;">
+
+<div style="background: #FEFCBF; border: 2px solid #ECC94B; border-radius: 10px; padding: 12px 30px; width: 550px; display: flex; align-items: center; gap: 15px;">
+<span style="font-size: 1.5em;">📄</span>
+<div>
+<strong style="color: #744210; font-size: 0.85em;">Dockerfile</strong> = Recipe<br/>
+<span style="font-size: 0.6em; color: #744210;">"Install R, Python, Claude Code..."</span>
+</div>
+</div>
+
+<div style="color: #A0AEC0; font-size: 0.6em;">↓ <code>docker buildx build</code> (~20--30 min)</div>
+
+<div style="background: #BEE3F8; border: 2px solid #4299E1; border-radius: 10px; padding: 12px 30px; width: 550px; display: flex; align-items: center; gap: 15px;">
+<span style="font-size: 1.5em;">📦</span>
+<div>
+<strong style="color: #2A4365; font-size: 0.85em;">Image</strong> = Frozen Meal<br/>
+<span style="font-size: 0.6em; color: #2A4365;">Complete environment snapshot, ready to use</span>
+</div>
+</div>
+
+<div style="color: #A0AEC0; font-size: 0.6em;">↓ <code>docker compose up</code> (~10 sec)</div>
+
+<div style="background: #C6F6D5; border: 2px solid #48BB78; border-radius: 10px; padding: 12px 30px; width: 550px; display: flex; align-items: center; gap: 15px;">
+<span style="font-size: 1.5em;">🏃</span>
+<div>
+<strong style="color: #22543D; font-size: 0.85em;">Container</strong> = Meal on Your Plate<br/>
+<span style="font-size: 0.6em; color: #22543D;">A running instance where you work</span>
+</div>
+</div>
+
+</div>
+```
+
+
+## Why Docker for AI Agents?
+
+```{=html}
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; max-width: 850px; margin: 10px auto;">
+
+<div style="background: #F7FAFC; border-left: 4px solid #48BB78; padding: 12px 14px; border-radius: 0 8px 8px 0;">
+<strong style="color: #276749; font-size: 0.75em;">🔒 Safety</strong><br/>
+<span style="font-size: 0.6em; color: #4A5568;">Agent cannot touch your files or system.</span>
+</div>
+
+<div style="background: #F7FAFC; border-left: 4px solid #4299E1; padding: 12px 14px; border-radius: 0 8px 8px 0;">
+<strong style="color: #2B6CB0; font-size: 0.75em;">🔄 Reproducibility</strong><br/>
+<span style="font-size: 0.6em; color: #4A5568;">Everyone gets the exact same environment.</span>
+</div>
+
+<div style="background: #F7FAFC; border-left: 4px solid #ED8936; padding: 12px 14px; border-radius: 0 8px 8px 0;">
+<strong style="color: #9C4221; font-size: 0.75em;">🧹 Easy Cleanup</strong><br/>
+<span style="font-size: 0.6em; color: #4A5568;">Delete container = clean system again.</span>
+</div>
+
+<div style="background: #F7FAFC; border-left: 4px solid #9F7AEA; padding: 12px 14px; border-radius: 0 8px 8px 0;">
+<strong style="color: #553C9A; font-size: 0.75em;">📤 Portability</strong><br/>
+<span style="font-size: 0.6em; color: #4A5568;">Share Dockerfile = share entire setup.</span>
+</div>
+
+</div>
+```
+
+
+# Part 2: Installing Docker {background-color="#2D3748"}
+
+
+## Docker Desktop is Free for Education
+
+```{=html}
+<div style="background: #EBF8FF; border: 2px solid #4299E1; border-radius: 12px; padding: 20px 25px; max-width: 750px; margin: 15px auto;">
+<p style="font-size: 0.75em; color: #2B6CB0; margin: 0;">
+<strong>🎓 Good news:</strong> Docker Desktop is <strong>free for educational use</strong>.<br/>
+Students and educators at universities can use it without any licensing concerns.
+</p>
+</div>
+```
+
+Two options for Windows users:
+
+| | Docker Desktop | Docker Engine in WSL 2 |
+|---|---|---|
+| **GUI** | ✅ Yes | ❌ CLI only |
+| **Setup** | Easy (installer) | Moderate (manual) |
+| **Best for** | Beginners | Experienced users |
+
+Mac users: Docker Desktop is the standard choice.
+
+
+## Windows + Docker Desktop
+
+**Step 1:** Install WSL 2 (PowerShell as Admin)
+
+```powershell
+wsl --install
+```
+
+Restart. Set a Linux username and password.
+
+**Step 2:** Download Docker Desktop from [docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop/)
+
+Run installer, keep defaults, restart if asked.
+
+**Step 3:** Configure Docker Desktop
+
+- Settings → General: ✅ "Use WSL 2 based engine"
+- Settings → Resources → WSL Integration: ✅ Ubuntu
+
+**⏱ Total: ~15 min including restarts**
+
+
+## Windows: Verify & Configure
+
+**Step 4:** Open **Ubuntu** (NOT PowerShell!) and run:
+
+```bash
+docker run hello-world
+```
+
+You should see **"Hello from Docker!"**
+
+. . .
+
+**Step 5:** Adjust resources in Docker Desktop → Settings → Resources:
+
+| Setting | Recommended |
+|---------|------------|
+| CPUs | 4+ |
+| Memory | 8--16 GB |
+| Disk | 60+ GB |
+
+These are upper limits --- Docker only uses what it needs.
+
+
+## Mac: Step by Step
+
+**Step 1:** Check your chip (Apple menu → About This Mac)
+
+- M1/M2/M3/M4 = Apple Silicon
+- Otherwise = Intel
+
+**Step 2:** Download Docker Desktop from [docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop/)
+
+Choose your chip type. Open `.dmg`, drag to Applications.
+
+**Step 3:** Open Docker, grant permissions, accept agreement.
+
+**Step 4:** Open Terminal and verify:
+
+```bash
+docker run hello-world
+```
+
+**⏱ Total: ~10 min**
+
+
+## Alternative: Docker Engine in WSL 2 (No Desktop)
+
+For Windows users who prefer a **lightweight, CLI-only** setup:
+
+**Step 1:** Install WSL 2 (same as before: `wsl --install`, restart)
+
+**Step 2:** Open Ubuntu terminal, install Docker Engine:
+
+```bash
+# Add Docker repo + install (full commands in handout)
+sudo apt-get update
+sudo apt-get install -y docker-ce docker-ce-cli \
+  containerd.io docker-buildx-plugin docker-compose-plugin
+```
+
+**Step 3:** Start Docker manually each session:
+
+```bash
+sudo service docker start
+```
+
+**⏱ ~15 min** · Full step-by-step in the handout, Part 2 Option B
+
+
+## WSL 2 Docker Engine: Tips
+
+```{=html}
+<div style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
+
+<div style="background: #F0FFF4; border-left: 4px solid #48BB78; padding: 10px 15px; border-radius: 0 8px 8px 0;">
+<strong style="color: #276749; font-size: 0.75em;">Auto-start Docker daemon</strong><br/>
+<code style="font-size: 0.6em;">echo 'sudo service docker start' >> ~/.bashrc</code>
+</div>
+
+<div style="background: #F0FFF4; border-left: 4px solid #48BB78; padding: 10px 15px; border-radius: 0 8px 8px 0;">
+<strong style="color: #276749; font-size: 0.75em;">Run docker without sudo</strong><br/>
+<code style="font-size: 0.6em;">sudo usermod -aG docker $USER</code><br/>
+<span style="font-size: 0.6em; color: #4A5568;">Then close and re-open your terminal.</span>
+</div>
+
+<div style="background: #EBF8FF; border-left: 4px solid #4299E1; padding: 10px 15px; border-radius: 0 8px 8px 0;">
+<strong style="color: #2B6CB0; font-size: 0.75em;">Everything else stays the same</strong><br/>
+<span style="font-size: 0.6em; color: #4A5568;">All <code>docker build</code>, <code>docker compose</code>, and <code>docker run</code> commands work identically — Docker Desktop or Engine in WSL 2.</span>
+</div>
+
+</div>
+```
+
+
+# Part 3: Building Your First Image {background-color="#2D3748"}
+
+
+## What Goes Into the Dockerfile
+
+```{=html}
+<div style="display: flex; flex-direction: column; align-items: center; gap: 4px; margin-top: 5px;">
+
+<div style="background: #EDF2F7; border: 2px solid #A0AEC0; border-radius: 8px; padding: 6px 25px; width: 600px; text-align: center;">
+<span style="font-size: 0.65em; color: #4A5568;"><strong>Layer 1:</strong> Ubuntu 24.04 base</span>
+</div>
+<div style="color: #A0AEC0; font-size: 0.5em;">+</div>
+
+<div style="background: #EDF2F7; border: 2px solid #A0AEC0; border-radius: 8px; padding: 6px 25px; width: 600px; text-align: center;">
+<span style="font-size: 0.65em; color: #4A5568;"><strong>Layer 2:</strong> System tools (curl, wget, git, LaTeX)</span>
+</div>
+<div style="color: #A0AEC0; font-size: 0.5em;">+</div>
+
+<div style="background: #BEE3F8; border: 2px solid #4299E1; border-radius: 8px; padding: 6px 25px; width: 600px; text-align: center;">
+<span style="font-size: 0.65em; color: #2A4365;"><strong>Layer 3:</strong> R + econometrics packages</span>
+</div>
+<div style="color: #A0AEC0; font-size: 0.5em;">+</div>
+
+<div style="background: #FEFCBF; border: 2px solid #ECC94B; border-radius: 8px; padding: 6px 25px; width: 600px; text-align: center;">
+<span style="font-size: 0.65em; color: #744210;"><strong>Layer 4:</strong> Python + numpy, pandas, matplotlib</span>
+</div>
+<div style="color: #A0AEC0; font-size: 0.5em;">+</div>
+
+<div style="background: #C6F6D5; border: 2px solid #48BB78; border-radius: 8px; padding: 6px 25px; width: 600px; text-align: center;">
+<span style="font-size: 0.65em; color: #22543D;"><strong>Layer 5:</strong> Node.js + Claude Code + Codex + Gemini CLI</span>
+</div>
+
+</div>
+```
+
+Docker **caches** every layer. Change the last layer only? Rebuild in seconds.
+
+
+## Installing R
+
+```dockerfile
+# Install R
+RUN apt-get update && \
+    apt-get install -y r-base r-base-dev && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install R packages (~10-15 min)
+RUN Rscript -e "install.packages(c(
+    'tidyverse', 'fixest', 'modelsummary',
+    'haven', 'data.table', 'ggplot2'
+    ), repos='https://cloud.r-project.org', Ncpus=4)"
+```
+
+R packages are pre-installed in the Dockerfile --- you wait once, not every time.
+
+
+## Installing Python, AI Agents, and Stata?
+
+```dockerfile
+# Python
+RUN apt-get install -y python3 python3-pip
+RUN pip3 install numpy pandas matplotlib
+
+# Node.js (needed for Codex and Gemini CLI)
+RUN curl -fsSL https://deb.nodesource.com/setup_24.x | bash -
+RUN apt-get install -y nodejs
+
+# Claude Code
+RUN curl -fsSL https://claude.ai/install.sh | bash
+
+# OpenAI Codex
+RUN npm install -g @openai/codex
+
+# Google Gemini CLI
+RUN npm install -g @google/gemini-cli
+```
+
+. . .
+
+**Stata** is commercial software. You need a **Linux license** from your university, or use R equivalents (`fixest`, `plm`, `rdrobust`). See the handout.
+
+
+## Customize It --- Ask an LLM!
+
+The provided Dockerfile is a **starting point**. Want to add packages or tools?
+
+. . .
+
+**Paste the Dockerfile into your favourite LLM** and ask:
+
+> *"I need to add the `sf` and `terra` R packages for geospatial analysis. How should I modify this Dockerfile?"*
+
+. . .
+
+LLMs are excellent at writing and debugging Dockerfiles --- they know the right system libraries, dependency chains, and best practices.
+
+```{=html}
+<div style="background: #F0FFF4; border: 1px solid #38A169; border-radius: 8px; padding: 12px 20px; margin-top: 15px; max-width: 550px; margin-left: auto; margin-right: auto;">
+<span style="font-size: 0.7em; color: #276749;">
+<strong>Great way to learn Docker</strong> while getting a setup tailored to your research.
+</span>
+</div>
+```
+
+
+## Building the Image
+
+```bash
+cd ~/coding-agent-workshop
+docker buildx build -t coding-agent .
+```
+
+. . .
+
+```{=html}
+<div style="display: flex; gap: 40px; justify-content: center; margin-top: 15px;">
+
+<div style="background: #FFF5F5; border-radius: 8px; padding: 12px 25px; text-align: center;">
+<strong style="color: #9B2C2C; font-size: 0.8em;">First build</strong><br/>
+<span style="font-size: 0.7em;">~20--30 min ☕</span>
+</div>
+
+<div style="background: #F0FFF4; border-radius: 8px; padding: 12px 25px; text-align: center;">
+<strong style="color: #276749; font-size: 0.8em;">Rebuild (cached)</strong><br/>
+<span style="font-size: 0.7em;">&lt; 10 seconds ⚡</span>
+</div>
+
+</div>
+```
+
+
+# Part 4: Containers & Volumes {background-color="#2D3748"}
+
+
+## Starting a Container
+
+```bash
+# Start in background
+docker compose up -d
+
+# Enter the container
+docker exec -it my-agent bash
+```
+
+```{=html}
+<div style="background: #272822; color: #A0AEC0; font-family: 'Fira Code', monospace; padding: 16px; border-radius: 8px; font-size: 0.55em; line-height: 1.7; margin-top: 10px;">
+<span style="color: #48BB78;">you@laptop:~$</span> docker exec -it my-agent bash<br/>
+<span style="color: #48BB78;">root@a1b2c3d4:/home/agent#</span> R --version | head -1<br/>
+<span style="color: white;">R version 4.4.1 (2024-06-14)</span> ✓<br/>
+<span style="color: #48BB78;">root@a1b2c3d4:/home/agent#</span> claude --version<br/>
+<span style="color: white;">Claude Code v2.x.x</span> ✓<br/>
+<span style="color: #48BB78;">root@a1b2c3d4:/home/agent#</span> gemini --version<br/>
+<span style="color: white;">Gemini CLI v0.x.x</span> ✓<br/>
+<span style="color: #48BB78;">root@a1b2c3d4:/home/agent#</span> exit<br/>
+<span style="color: #48BB78;">you@laptop:~$</span> <span style="opacity: 0.5;">← back on host</span>
+</div>
+```
+
+
+## Volume Mounts: Host ↔ Container
+
+```{=html}
+<div style="display: grid; grid-template-columns: 1fr 60px 1fr; gap: 5px; align-items: center; max-width: 850px; margin: 10px auto;">
+
+<div style="background: #EBF8FF; border: 2px solid #4299E1; border-radius: 10px; padding: 12px;">
+<strong style="color: #2B6CB0; font-size: 0.7em;">💻 Your Computer</strong>
+<pre style="font-size: 0.5em; margin: 5px 0 0 0; background: none; color: #2A4365; padding: 0; box-shadow: none; line-height: 1.5;">~/project/
+  workspace/    ← shared
+  output/       ← shared
+  CLAUDE.md     ← shared (read-only)
+  my-photos/    ← NOT shared
+  passwords.txt ← NOT shared</pre>
+</div>
+
+<div style="text-align: center;">
+<span style="font-size: 1.2em;">🔗</span>
+</div>
+
+<div style="background: #F0FFF4; border: 2px solid #48BB78; border-radius: 10px; padding: 12px;">
+<strong style="color: #276749; font-size: 0.7em;">🐳 Container</strong>
+<pre style="font-size: 0.5em; margin: 5px 0 0 0; background: none; color: #22543D; padding: 0; box-shadow: none; line-height: 1.5;">/home/agent/
+  project/   ← agent works here
+  output/    ← results go here
+  CLAUDE.md  ← agent reads this
+
+  (everything else is
+   invisible to the agent)</pre>
+</div>
+
+</div>
+```
+
+**Only explicitly mounted folders are visible.** Everything else stays private.
+
+
+## The docker-compose.yml
+
+```yaml
+services:
+  agent:
+    image: coding-agent
+    container_name: my-agent
+    stdin_open: true
+    tty: true
+    mem_limit: 16g            # Max RAM
+    cpus: 4                   # Max CPU cores
+    pids_limit: 512           # Max processes
+    volumes:
+      - ./workspace:/home/agent/project
+      - ./output:/home/agent/output
+      - ./CLAUDE.md:/home/agent/CLAUDE.md:ro
+      - agent-auth:/root/.claude
+
+volumes:
+  agent-auth:
+```
+
+
+# Part 5: AI Coding Agents (Three Options) {background-color="#2D3748"}
+
+
+## Claude Code: Option A --- API Key
+
+**Pay per use.** You control spending via the API dashboard.
+
+1. Go to [platform.claude.com](https://platform.claude.com/)
+2. Create account → "API Keys" → "Create Key"
+3. Add $5--10 billing credit
+
+```bash
+# Inside the container:
+export ANTHROPIC_API_KEY="sk-ant-your-key-here"
+claude
+```
+
+The key starts with `sk-ant-...` --- save it somewhere safe.
+
+
+## Claude Code: Option B --- Max Subscription
+
+**Flat monthly fee.** No per-token charges.
+
+Subscribe at [claude.ai](https://claude.ai/) (Pro $20/mo, Max $100--200/mo)
+
+```bash
+# Inside the container:
+claude
+```
+
+```{=html}
+<div style="background: #272822; color: #A0AEC0; font-family: 'Fira Code', monospace; padding: 14px; border-radius: 8px; font-size: 0.5em; line-height: 1.7; margin-top: 8px;">
+<span style="color: #ECC94B;">⚠ Authentication required</span><br/>
+<span style="color: white;">To sign in, open this URL in your browser:</span><br/>
+<span style="color: #63B3ED; text-decoration: underline;">https://claude.ai/login?code=ABCD-1234-EFGH</span><br/><br/>
+<span style="color: #718096;">Waiting for authentication...</span><br/>
+<span style="color: #48BB78;">✓ Authenticated successfully!</span>
+</div>
+```
+
+Copy URL → open in browser → log in → done. **Saved in Docker volume.**
+
+
+## OpenAI Codex
+
+Open source (Apache 2.0) — [github.com/openai/codex](https://github.com/openai/codex)
+
+```bash
+# Inside the container:
+export OPENAI_API_KEY="sk-your-key-here"
+codex
+```
+
+Get a key at [platform.openai.com](https://platform.openai.com/) → API Keys
+
+. . .
+
+For non-interactive use:
+
+```bash
+codex exec "fix the failing tests" --full-auto
+```
+
+Inside Docker, use `--sandbox danger-full-access` --- the container IS your sandbox.
+
+
+## Google Gemini CLI
+
+Open source (Apache 2.0) — [github.com/google-gemini/gemini-cli](https://github.com/google-gemini/gemini-cli)
+
+```bash
+# Inside the container:
+export GEMINI_API_KEY="your-key-here"
+gemini
+```
+
+Get a key at [aistudio.google.com](https://aistudio.google.com/) → API Keys
+
+. . .
+
+Or use for free with your personal Google account (60 req/min):
+
+```bash
+gemini          # Browser login on first run
+```
+
+
+## Verify Everything Works
+
+```{=html}
+<div style="background: #272822; color: #A0AEC0; font-family: 'Fira Code', monospace; padding: 16px; border-radius: 8px; font-size: 0.55em; line-height: 1.8;">
+<span style="color: #48BB78;">root@container:~#</span> R --version | head -1<br/>
+<span style="color: white;">R version 4.4.1 (2024-06-14)</span> <span style="color: #48BB78;">✓</span><br/>
+<span style="color: #48BB78;">root@container:~#</span> python3 --version<br/>
+<span style="color: white;">Python 3.10.12</span> <span style="color: #48BB78;">✓</span><br/>
+<span style="color: #48BB78;">root@container:~#</span> claude --version<br/>
+<span style="color: white;">Claude Code v2.x.x</span> <span style="color: #48BB78;">✓</span><br/>
+<span style="color: #48BB78;">root@container:~#</span> codex --version<br/>
+<span style="color: white;">0.104.0</span> <span style="color: #48BB78;">✓</span><br/>
+<span style="color: #48BB78;">root@container:~#</span> gemini --version<br/>
+<span style="color: white;">Gemini CLI v0.x.x</span> <span style="color: #48BB78;">✓</span>
+</div>
+```
+
+. . .
+
+Now start working:
+
+```bash
+claude --verbose
+```
+
+
+# Part 6: Safety {background-color="#2D3748"}
+
+
+## The Risk: Filling Up Your Disk
+
+```{=html}
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 800px; margin: 15px auto;">
+
+<div style="background: #FFF5F5; border-radius: 10px; padding: 16px; border: 2px solid #FC8181;">
+<h3 style="margin: 0 0 8px 0; color: #9B2C2C; font-size: 0.75em;">😱 Without limits</h3>
+<p style="font-size: 0.6em; color: #4A5568; margin: 0;">Agent downloads 100 GB.<br/>System drive fills up.<br/>Computer freezes. Bad day.</p>
+</div>
+
+<div style="background: #F0FFF4; border-radius: 10px; padding: 16px; border: 2px solid #48BB78;">
+<h3 style="margin: 0 0 8px 0; color: #276749; font-size: 0.75em;">😌 With a disk limit</h3>
+<p style="font-size: 0.6em; color: #4A5568; margin: 0;">Agent hits 30 GB limit.<br/>"No space left on device".<br/>Your system is fine.</p>
+</div>
+
+</div>
+```
+
+**Solution:** Give Docker its own storage area with a hard size cap.
+
+
+## Three Levels of Protection
+
+```{=html}
+<div style="display: flex; flex-direction: column; align-items: center; gap: 8px; margin-top: 10px;">
+
+<div style="background: #F0FFF4; border: 2px solid #48BB78; border-radius: 10px; padding: 10px 25px; width: 650px; display: flex; justify-content: space-between; align-items: center;">
+<div>
+<strong style="color: #276749; font-size: 0.7em;">Option A: Move Docker Storage to Another Drive</strong><br/>
+<span style="font-size: 0.55em; color: #4A5568;">Settings → Resources → Disk image location (Mac) or WSL export/import (Win)</span>
+</div>
+<span style="background: #C6F6D5; color: #22543D; padding: 3px 10px; border-radius: 15px; font-size: 0.5em; font-weight: bold;">Easy</span>
+</div>
+
+<div style="background: #EBF8FF; border: 2px solid #4299E1; border-radius: 10px; padding: 10px 25px; width: 650px; display: flex; justify-content: space-between; align-items: center;">
+<div>
+<strong style="color: #2B6CB0; font-size: 0.7em;">Option B: Dedicated Disk Image for Docker</strong><br/>
+<span style="font-size: 0.55em; color: #4A5568;">Fixed-size virtual disk (e.g., 60 GB) — hard cap on all Docker storage</span>
+</div>
+<span style="background: #FEFCBF; color: #744210; padding: 3px 10px; border-radius: 15px; font-size: 0.5em; font-weight: bold;">Advanced</span>
+</div>
+
+<div style="background: #FEFCBF; border: 2px solid #ECC94B; border-radius: 10px; padding: 10px 25px; width: 650px; display: flex; justify-content: space-between; align-items: center;">
+<div>
+<strong style="color: #744210; font-size: 0.7em;">Option C: Size-Limited Workspace Folder</strong><br/>
+<span style="font-size: 0.55em; color: #4A5568;">Create a 30 GB disk image, mount as workspace volume</span>
+</div>
+<span style="background: #BEE3F8; color: #2A4365; padding: 3px 10px; border-radius: 15px; font-size: 0.5em; font-weight: bold;">Medium</span>
+</div>
+
+</div>
+```
+
+**Workshop recommendation:** Option A is sufficient. See handout Part 14 for Options B & C.
+
+
+## Option C: Size-Limited Workspace
+
+**Mac:**
+
+```bash
+hdiutil create -size 30g -fs APFS -volname AgentWorkspace \
+  -type SPARSE ~/agent_workspace.sparseimage
+hdiutil attach ~/agent_workspace.sparseimage
+# Use /Volumes/AgentWorkspace in docker-compose.yml
+```
+
+**Windows (WSL):**
+
+```bash
+dd if=/dev/zero of=~/agent_workspace.img bs=1M count=30720
+mkfs.ext4 ~/agent_workspace.img
+mkdir -p ~/project/workspace
+sudo mount -o loop ~/agent_workspace.img ~/project/workspace
+```
+
+Agent fills up the 30 GB? It stops. **Your system stays safe.**
+
+
+## Option A: Move Docker to a Separate Drive
+
+**Mac:** Docker Desktop → Settings → Resources → Disk image location → Browse → select external drive. Done.
+
+**Windows (PowerShell as Admin):**
+
+```powershell
+wsl --shutdown
+wsl --export docker-desktop-data D:\DockerData\backup.tar
+wsl --unregister docker-desktop-data
+wsl --import docker-desktop-data D:\DockerData \
+    D:\DockerData\backup.tar
+del D:\DockerData\backup.tar
+```
+
+All Docker data now lives on `D:\`. Your `C:\` drive is protected.
+
+
+## Safety Summary
+
+| Layer | Protects Against | Effort |
+|-------|-----------------|--------|
+| Docker container | Agent escaping to your system | Built-in |
+| Resource limits | RAM/CPU exhaustion | Easy |
+| Volume mounts | Unwanted file access | Easy |
+| Read-only (`:ro`) | Config file modification | Easy |
+| Option A: Separate drive | Filling your system drive | Easy |
+| Option B: Dedicated disk image | All Docker storage | Advanced |
+| Option C: Limited workspace | Data explosion | Medium |
+
+
+# Part 7: Hands-On {background-color="#2D3748"}
+
+
+## Quick Start: 9 Steps
+
+1. **Install** Docker Desktop (~10 min)
+2. **Create** project folder: `mkdir -p ~/coding-agent-workshop`
+3. **Create** `Dockerfile` (copy from handout Part 9)
+4. **Create** `docker-compose.yml` (copy from handout Part 5)
+5. **Build** the image: `docker buildx build -t coding-agent .`
+6. **Start** the container: `docker compose up -d`
+7. **Enter** the container: `docker exec -it my-agent bash`
+8. **Authenticate** your AI agent(s) (API key or subscription)
+9. **Start working:** `claude`, `codex`, or `gemini`
+
+See the handout for detailed instructions at each step.
+
+
+## Try It: Give the Agent a Task
+
+```bash
+docker exec -it my-agent bash
+claude --verbose
+```
+
+Then type:
+
+> Write an R script that loads the mtcars dataset,
+> runs a regression of mpg on wt and hp,
+> and saves a nice ggplot to output/regression_plot.pdf
+
+Watch it **plan**, **write code**, **run it**, **see errors**, **fix them**, and produce output.
+
+
+## Compare All Three Agents
+
+```bash
+# Claude Code
+claude -p "Analyze mtcars: regression of mpg~wt+hp, save plot"
+
+# OpenAI Codex
+codex exec "Analyze mtcars: regression of mpg~wt+hp, save plot"
+
+# Google Gemini CLI
+gemini -p "Analyze mtcars: regression of mpg~wt+hp, save plot"
+```
+
+Check `output/` on your host for results!
+
+. . .
+
+All three agents can:
+
+- Read and write files
+- Run R, Python, bash commands
+- Install packages if needed
+- Iterate on errors automatically
+
+
+## Cheat Sheet
+
+```{=html}
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; max-width: 850px; margin: 5px auto;">
+<div style="background: #F7FAFC; border-radius: 10px; padding: 12px;">
+<strong style="font-size: 0.7em;">🐳 Docker</strong>
+<pre style="font-size: 0.48em; margin: 5px 0 0 0; padding: 8px; line-height: 1.5;">docker compose up -d          # Start
+docker exec -it my-agent bash # Enter
+docker compose down           # Stop
+docker ps                     # List
+docker stats my-agent         # Monitor</pre>
+</div>
+
+<div style="background: #F7FAFC; border-radius: 10px; padding: 12px;">
+<strong style="font-size: 0.7em;">🤖 Inside Container</strong>
+<pre style="font-size: 0.48em; margin: 5px 0 0 0; padding: 8px; line-height: 1.5;">claude                  # Claude Code
+claude --model opus     # Opus model
+codex                   # OpenAI Codex
+gemini                  # Gemini CLI
+R / Rscript script.R    # Run R
+python3                 # Run Python</pre>
+</div>
+</div>
+```
+
+
+## Summary
+
+```{=html}
+<div style="max-width: 750px; margin: 10px auto; display: grid; grid-template-columns: auto 1fr; gap: 8px 15px; align-items: center; font-size: 0.75em;">
+
+<div style="font-size: 1.2em;">🐳</div>
+<div><strong>Docker = Safety.</strong> Container is a sandbox. Agent cannot touch your system.</div>
+
+<div style="font-size: 1.2em;">📄</div>
+<div><strong>Dockerfile = Recipe.</strong> R, Python, Claude Code, Codex, Gemini CLI --- all in one file.</div>
+
+<div style="font-size: 1.2em;">🔗</div>
+<div><strong>Volumes = Bridges.</strong> Only mounted folders are visible. Everything else is private.</div>
+
+<div style="font-size: 1.2em;">🔒</div>
+<div><strong>Limits protect you.</strong> RAM, CPU, disk caps keep your laptop responsive.</div>
+
+<div style="font-size: 1.2em;">🤖</div>
+<div><strong>Three agents, one container.</strong> Claude Code + Codex + Gemini CLI side by side.</div>
+
+</div>
+```
+
+
+## Resources
+
+| Resource | Link |
+|----------|------|
+| **Workshop Materials** | [**github.com/AlexRieber/Workshops/Docker**](https://github.com/AlexRieber/Workshops/tree/main/Docker) |
+| Docker Desktop | [docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop/) |
+| Claude Code Docs | [code.claude.com/docs](https://code.claude.com/docs/en/overview) |
+| Anthropic API Keys | [platform.claude.com](https://platform.claude.com/) |
+| OpenAI Codex | [github.com/openai/codex](https://github.com/openai/codex) |
+| OpenAI API Keys | [platform.openai.com](https://platform.openai.com/) |
+| Google Gemini CLI | [github.com/google-gemini/gemini-cli](https://github.com/google-gemini/gemini-cli) |
+| Google AI Studio | [aistudio.google.com](https://aistudio.google.com/) |
+
+```{=html}
+<div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 12px; max-width: 450px; margin: 15px auto; text-align: center;">
+<p style="margin: 0; font-size: 0.85em; font-weight: bold;">Questions? Let's set up your first container!</p>
+</div>
+```

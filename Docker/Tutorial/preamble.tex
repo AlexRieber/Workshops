@@ -1,0 +1,139 @@
+% =============================================================================
+%  preamble.tex — Professional styling for Docker Setup Howto (PDF output)
+% =============================================================================
+
+% ---------- fonts (fontspec for XeLaTeX) ------------------------------------
+\usepackage{fontspec}
+\setmainfont{TeX Gyre Termes}
+\setsansfont{TeX Gyre Heros}
+\setmonofont{TeX Gyre Cursor}
+
+% ---------- packages --------------------------------------------------------
+\usepackage[many]{tcolorbox}
+\usepackage{fontawesome5}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{enumitem}
+
+% ---------- colour palette (matches custom-docker.scss) ---------------------
+\definecolor{dockerblue}{HTML}{4299E1}
+\definecolor{dockerdark}{HTML}{2D3748}
+\definecolor{dockergray}{HTML}{4A5568}
+\definecolor{lightblue}{HTML}{EBF4FF}
+\definecolor{lightgray}{HTML}{F7FAFC}
+\definecolor{winblue}{HTML}{0078D4}
+\definecolor{winbg}{HTML}{EFF6FF}
+\definecolor{macgray}{HTML}{636366}
+\definecolor{macbg}{HTML}{F5F5F7}
+\definecolor{tipgreen}{HTML}{38A169}
+\definecolor{tipbg}{HTML}{F0FFF4}
+\definecolor{warnred}{HTML}{E53E3E}
+\definecolor{warnbg}{HTML}{FFF5F5}
+\definecolor{notebg}{HTML}{FFFFF0}
+\definecolor{noteamber}{HTML}{D69E2E}
+
+% ---------- tcolorbox styles ------------------------------------------------
+\tcbset{
+  osboxbase/.style={
+    enhanced,
+    breakable,
+    boxrule=0.5pt,
+    arc=4pt,
+    left=8pt, right=8pt, top=6pt, bottom=6pt,
+    fonttitle=\bfseries\sffamily,
+    before skip=8pt,
+    after skip=8pt,
+    parbox=false,
+  },
+}
+
+% Windows box (blue)
+\newtcolorbox{windowsbox}[1][]{%
+  osboxbase,
+  colback=winbg,
+  colframe=winblue,
+  coltitle=white,
+  colbacktitle=winblue,
+  title={\faWindows\hspace{6pt}Windows},
+  #1
+}
+
+% Mac box (gray)
+\newtcolorbox{macbox}[1][]{%
+  osboxbase,
+  colback=macbg,
+  colframe=macgray,
+  coltitle=white,
+  colbacktitle=macgray,
+  title={\faApple\hspace{6pt}Mac},
+  #1
+}
+
+% ---------- page layout (fancyhdr) ------------------------------------------
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\sffamily\color{dockergray}Docker Setup Guide}
+\fancyhead[R]{\small\sffamily\color{dockergray}\thepage}
+\fancyfoot[C]{\footnotesize\sffamily\color{dockergray}AI Coding Agents Workshop}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{%
+  \color{dockerblue}\leaders\hrule height \headrulewidth\hfill}}
+\renewcommand{\footrulewidth}{0pt}
+
+% also apply to first-page style (chapter openings)
+\fancypagestyle{plain}{%
+  \fancyhf{}
+  \fancyhead[L]{\small\sffamily\color{dockergray}Docker Setup Guide}
+  \fancyhead[R]{\small\sffamily\color{dockergray}\thepage}
+  \fancyfoot[C]{\footnotesize\sffamily\color{dockergray}AI Coding Agents Workshop}
+  \renewcommand{\headrulewidth}{0.4pt}
+  \renewcommand{\headrule}{\hbox to\headwidth{%
+    \color{dockerblue}\leaders\hrule height \headrulewidth\hfill}}
+}
+
+% ---------- section headings (titlesec) -------------------------------------
+\titleformat{\section}
+  {\LARGE\bfseries\sffamily\color{dockerdark}}
+  {\thesection}{0.6em}{}
+  [\vspace{2pt}{\color{dockerblue}\titlerule[1.5pt]}]
+
+\titleformat{\subsection}
+  {\large\bfseries\sffamily\color{dockerdark}}
+  {\thesubsection}{0.5em}{}
+
+\titleformat{\subsubsection}
+  {\normalsize\bfseries\sffamily\color{dockergray}}
+  {\thesubsubsection}{0.5em}{}
+
+\titleformat{\paragraph}[runin]
+  {\normalsize\bfseries\sffamily\color{dockergray}}
+  {\theparagraph}{0.5em}{}[.]
+\titlespacing*{\paragraph}{0pt}{3.25ex plus 1ex minus .2ex}{0.5em}
+
+\titleformat{\subparagraph}[runin]
+  {\normalsize\itshape\color{dockergray}}
+  {\thesubparagraph}{0.5em}{}[.]
+\titlespacing*{\subparagraph}{0pt}{2.25ex plus 1ex minus .2ex}{0.5em}
+
+% ---------- fix headheight for fancyhdr -------------------------------------
+\setlength{\headheight}{14pt}
+
+% ---------- table styling ---------------------------------------------------
+\renewcommand{\arraystretch}{1.35}
+
+% ---------- tighter lists ---------------------------------------------------
+\setlist{nosep, leftmargin=1.5em}
+
+% ---------- allow line breaks in monospace within tables --------------------
+\tolerance=1000
+\emergencystretch=1.5em
+
+% ---------- code-block overflow helper --------------------------------------
+\usepackage{fvextra}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{
+  breaklines, breakanywhere, commandchars=\\\{\}
+}

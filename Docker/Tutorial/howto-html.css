@@ -1,0 +1,86 @@
+/* =============================================================================
+   howto-html.css — HTML supplement for Docker Setup Howto
+   ============================================================================= */
+
+/* ---------- OS comparison: side-by-side layout ----------------------------- */
+.os-compare {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+.os-compare > .os-box {
+  flex: 1 1 45%;
+  min-width: 280px;
+}
+
+/* ---------- OS boxes (standalone + inside .os-compare) --------------------- */
+.os-box {
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 1rem;
+  border: 1px solid #ddd;
+}
+.os-box-header {
+  padding: 0.5rem 1rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+  font-family: "Poppins", "Inter", "Segoe UI", Roboto, sans-serif;
+}
+.os-box-body {
+  padding: 0.75rem 1rem;
+}
+.os-box-body > :first-child { margin-top: 0; }
+.os-box-body > :last-child  { margin-bottom: 0; }
+
+/* Windows variant */
+.os-windows .os-box-header {
+  background: #0078D4;
+  color: #fff;
+}
+.os-windows {
+  background: #EFF6FF;
+  border-color: #0078D4;
+}
+
+/* Mac variant */
+.os-mac .os-box-header {
+  background: #636366;
+  color: #fff;
+}
+.os-mac {
+  background: #F5F5F7;
+  border-color: #636366;
+}
+
+/* ---------- code blocks ---------------------------------------------------- */
+pre > code {
+  font-size: 0.88em;
+  line-height: 1.5;
+}
+
+/* ---------- tables --------------------------------------------------------- */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1rem 0;
+  font-size: 0.93em;
+}
+thead th {
+  background: #EDF2F7;
+  color: #2D3748;
+  font-weight: 600;
+  padding: 8px 12px;
+  text-align: left;
+  border-bottom: 2px solid #CBD5E0;
+}
+tbody td {
+  padding: 6px 12px;
+  border-bottom: 1px solid #E2E8F0;
+}
+tbody tr:hover {
+  background: #F7FAFC;
+}
+
+/* ---------- Font Awesome CDN fallback hint --------------------------------- */
+/* Quarto's HTML output usually includes FA; this is a safety net */
