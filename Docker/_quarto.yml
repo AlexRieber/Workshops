@@ -7,6 +7,6 @@ website:
   navbar:
     left:
       - text: Tutorial
-        href: docker-setup-howto.qmd
+        href: Tutorial/docker-setup-howto.qmd
       - text: Slides
-        href: docker-setup-slides.qmd
+        href: Slides/docker-setup-slides.qmd

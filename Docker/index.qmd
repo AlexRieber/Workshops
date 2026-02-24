@@ -6,8 +6,8 @@ Welcome to the Docker setup tutorial. Here you'll find everything you need to ge
 
 ## Materials
 
-- [Tutorial](docker-setup-howto.qmd) — Step-by-step guide to installing and configuring Docker
-- [Slides](docker-setup-slides.qmd) — Accompanying slide deck
+- [Tutorial](Tutorial/docker-setup-howto.qmd) — Step-by-step guide to installing and configuring Docker
+- [Slides](Slides/docker-setup-slides.qmd) — Accompanying slide deck
 
 ## About
 
