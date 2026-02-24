@@ -11,16 +11,21 @@ jobs:
       contents: write
       pages: write
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
-      - uses: quarto-dev/quarto-actions/setup@v2
+      - name: Setup Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
 
-      - name: Render
+      - name: Render site
         uses: quarto-dev/quarto-actions/render@v2
+        with:
+          path: Docker/
 
       - name: Deploy to GitHub Pages
         uses: quarto-dev/quarto-actions/publish@v2
         with:
           target: gh-pages
+          path: Docker/
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
