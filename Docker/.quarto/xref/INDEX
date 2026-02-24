@@ -1,0 +1,11 @@
+{
+  "Tutorial/docker-setup-howto.qmd": {
+    "docker-setup-howto.html": "6f6861dc"
+  },
+  "Slides/docker-setup-slides.qmd": {
+    "docker-setup-slides.html": "f182d420"
+  },
+  "index.qmd": {
+    "index.html": "d370e36b"
+  }
+}
