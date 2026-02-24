@@ -1,0 +1,17 @@
+project:
+  type: website
+
+website:
+  title: "Workshops about AI Agents"
+  navbar:
+    left:
+      - text: Home
+        href: index.qmd
+      - text: Docker
+        href: Docker/index.qmd
+      - text: AI Agents
+        href: AI_Agents/index.qmd
+
+format:
+  html:
+    theme: cosmo

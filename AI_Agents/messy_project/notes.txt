@@ -1,0 +1,29 @@
+Notes for the replication package
+=================================
+
+DATA:
+- 1_experiment_clean.dta = main experimental data (waves 1-3), 1043 obs
+- 2_nextofkin_clean.dta = next of kin experiment (MTurk), 803 obs
+- 3_dmv_quarterly_clean.dta = state DMV registration rates, 1416 obs
+- dmv_quarterly_raw.csv = raw version (quarterly data by state)
+- nextofkin_raw.csv = raw NOK data from Qualtrics
+
+STATA CODE (original):
+- see original .do files from Kessler & Roth
+- we're converting everything to R
+
+ISSUES:
+- Table1_descriptive.R still has hardcoded path — fix later
+- "make figs.R" has a space in the name... should rename
+- old_robustness_checks.R — not sure which checks to keep
+- quick_look.R — delete before submission
+- Need to figure out stacked DiD for column 7 of Table 3
+- Event study figure looks weird for Hawaii — check data gap
+
+TODO:
+- Write README (lol)
+- Add LICENSE file
+- Create master script
+- Package versions??? what are we using?
+- Check: does the NOK confidence index match Stata output?
+- Tennessee dropped from DMV analysis — document why

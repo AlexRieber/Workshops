@@ -1,0 +1,15 @@
+---
+title: "AI Agents Setup Tutorial"
+---
+
+Welcome to the AI Agents setup tutorial. Here you'll find everything you need to get first experience with different AI Agents from the terminal.
+
+## Materials
+
+- [Tutorial](Tutorial/agent-workshop-howto.qmd) — Step-by-step guide to install and use different agents
+- [Slides](Slides/agent-workshop-slides.qmd) — Accompanying slide deck
+
+## About
+
+This tutorial was created for a small workshop on AI Agents in production.
+Feel free to open an issue on GitHub if something is unclear.
