@@ -1,0 +1,15 @@
+---
+title: "Docker Setup Tutorial"
+---
+
+Welcome to the Docker setup tutorial. Here you'll find everything you need to get Docker running on your machine.
+
+## Materials
+
+- [Tutorial](docker-setup-howto.qmd) — Step-by-step guide to installing and configuring Docker
+- [Slides](docker-setup-slides.qmd) — Accompanying slide deck
+
+## About
+
+This tutorial was created for a small workshop on AI Agents in production.
+Feel free to open an issue on GitHub if something is unclear.
