@@ -28,11 +28,11 @@ avg_slopes(m2)
 # then subtract 0.5 to center, and negate if choosing NOT to donate
 nok$conf_first <- NA
 for (i in 1:nrow(nok)) {
-  if (nok$order[i] <= 25) {
+  if (nok$order[i] == 1) {
     nok$conf_first[i] <- nok$yesno_reg_conf[i]
-  } else if (nok$order[i] <= 50) {
+  } else if (nok$order[i] == 2) {
     nok$conf_first[i] <- nok$yesno_unreg_conf[i]
-  } else if (nok$order[i] <= 75) {
+  } else if (nok$order[i] == 3) {
     nok$conf_first[i] <- nok$optin_reg_conf[i]
   } else {
     nok$conf_first[i] <- nok$optin_unreg_conf[i]
