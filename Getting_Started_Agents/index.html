@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Docker Setup Tutorial – Workshops about AI Agents</title>
+<title>Getting Started with Claude Code – Workshops about AI Agents</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -96,7 +96,7 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="../Docker/index.html" aria-current="page"> 
+    <a class="nav-link" href="../Docker/index.html"> 
 <span class="menu-text">Docker</span></a>
   </li>  
   <li class="nav-item">
@@ -120,7 +120,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Docker Setup Tutorial</h1>
+<h1 class="title">Getting Started with Claude Code</h1>
 </div>
 
 
@@ -137,17 +137,39 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>Welcome to the Docker setup tutorial. Here you’ll find everything you need to get Docker running on your machine.</p>
+<p>Welcome to <strong>Day 1</strong> of the AI Agents workshop. This is the on-ramp: what a coding agent <em>is</em>, how to think about it, and how to get your first <strong>Claude Code</strong> session going — either with a <strong>Claude Max</strong> subscription or with <strong>Anthropic API tokens</strong> (pay-as-you-go, around $5 covers the whole workshop).</p>
+<p>If you have never used a coding agent from the terminal before, <strong>start here</strong>. When you’re comfortable, move on to the <a href="../AI_Agents/">AI Agents</a> workshop (Day 2) to turn a messy research folder into an AEA-compliant replication package.</p>
 <section id="materials" class="level2">
 <h2 class="anchored" data-anchor-id="materials">Materials</h2>
 <ul>
-<li><a href="../Docker/Tutorial/docker-setup-howto.html">Tutorial</a> — Step-by-step guide to installing and configuring Docker</li>
-<li><a href="../Docker/Slides/docker-setup-slides.html">Slides</a> — Accompanying slide deck</li>
+<li><a href="../Getting_Started_Agents/Tutorial/getting-started-howto.html">Tutorial</a>. Step-by-step guide: mental models, both setup paths, first session, the <code>CLAUDE.md</code> file, pitfalls, cost management, and a small hands-on exercise.</li>
+<li><a href="../Getting_Started_Agents/Slides/getting-started-slides.html">Slides</a>. Accompanying slide deck.</li>
+<li><a href="../Getting_Started_Agents/Tutorial/TUTOR.html">TUTOR.md</a>. Optional: an instruction file that lets Claude Code walk you through your very first session, interactively.</li>
+</ul>
+</section>
+<section id="what-youll-leave-with" class="level2">
+<h2 class="anchored" data-anchor-id="what-youll-leave-with">What you’ll leave with</h2>
+<ul>
+<li><strong>Claude Code</strong> running locally against either Claude Max or an Anthropic API key.</li>
+<li>A mental model of what a coding agent is and isn’t: what it’s good at, where it fails, and what remains your job.</li>
+<li>Four prompt patterns you’ll reuse every day: <em>vague-start</em>, <em>scripts-not-commands</em>, <em>style-by-reference</em>, <em>small-iterations</em>.</li>
+<li>A <code>CLAUDE.md</code> of your own and a first feel for directing the agent through it.</li>
+<li>A checklist of pitfalls so you avoid the ones that bite beginners.</li>
+</ul>
+</section>
+<section id="prerequisites" class="level2">
+<h2 class="anchored" data-anchor-id="prerequisites">Prerequisites</h2>
+<ul>
+<li>Docker container from the <a href="../Docker/">Docker</a> workshop, up and running. The image bundles Claude Code.</li>
+<li>Either a <strong>Claude Max</strong> subscription, or a credit card to load <strong>$5</strong> into an <a href="https://console.anthropic.com">Anthropic Console</a> account. We set up both paths in the tutorial.</li>
+<li>Roughly 90 minutes.</li>
 </ul>
 </section>
 <section id="about" class="level2">
 <h2 class="anchored" data-anchor-id="about">About</h2>
-<p>This tutorial was created for a small workshop on AI Agents in production. Feel free to open an issue on GitHub if something is unclear.</p>
+<p>This workshop is aimed at <strong>Master’s and PhD students in economics</strong> who have used ChatGPT in a browser but have never driven a coding agent from the terminal. It complements Day 2 by starting one step earlier: with how to <em>think</em> about agents. It draws on Paul Goldsmith-Pinkham’s <a href="https://paulgp.substack.com/p/getting-started-with-claude-code">“Getting Started with Claude Code”</a> and <a href="https://paulgp.substack.com/p/from-an-empty-folder-to-a-figure">“From an empty folder to a figure”</a> for the pedagogy, and on the <a href="https://github.com/earendil-works/pi-tutorial">earendil-works/pi-tutorial</a> for the <em>agent-as-tutor</em> pattern shipped as <code>TUTOR.md</code>.</p>
+<p>Want to try non-Claude models (GPT-5, DeepSeek, Gemini)? The <strong>Day 2 tutorial appendix</strong> has a self-contained setup for <strong>Aider + OpenRouter</strong>: one API key, ~300 models, per-key spend caps.</p>
+<p>Feel free to open an issue on GitHub if anything is unclear.</p>
 
 
 </section>
