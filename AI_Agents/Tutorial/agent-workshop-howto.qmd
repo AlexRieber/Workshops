@@ -1,8 +1,8 @@
 ---
-title: "AI Coding Agents for Economists"
-subtitle: "From Messy Code to AER-Ready Replication Package"
+title: "AI Coding Agents for Economics Research"
+subtitle: "Claude Code. From Messy Code to AER-Ready Replication Package. Day 2"
 author: "Alexander Rieber ([@AlexRieber](https://github.com/AlexRieber)) · Ulm University"
-date: "February 25, 2026"
+date: "April 22, 2026"
 format:
   html:
     theme: cosmo
@@ -17,47 +17,47 @@ format:
 ---
 
 ::: {.callout-note appearance="simple"}
-**Who is this for?** Graduate students and post-docs who want to learn how to use AI coding agents (Claude Code, Gemini CLI, Codex CLI) from the terminal to organize, document, and package research code to professional standards.
+**Who is this for?** Master's students, PhD students, and post-docs who want to use Claude Code from the terminal to organise, document, and package research code to professional (AER/AEA) standards.
 
-**Prerequisites:** Docker container built and running from the **Docker Setup How-To**. A Claude Max subscription, Gemini API key, or OpenAI API key.
+**This is Day 2.** We go deeper on Claude Code specifically: custom skills, hooks, plan mode, permission allow-lists, research best practices, and the messy-project-to-replication-package exercise. If you skipped Day 1, **Part 2** repeats the Claude Code setup so you can follow along.
 
-**Workshop materials:** The messy project folder, this handout, and all supporting files are at **[github.com/AlexRieber/Workshops/AI_Agents](https://github.com/AlexRieber/Workshops/tree/main/AI_Agents)**. See Part 8 for download instructions.
+**Prerequisites:** Docker container built and running (see **Docker Setup How-To**). Either a **Claude Max** subscription, or an **Anthropic API key** with a few dollars of credit.
+
+**Want other model families (GPT-5, DeepSeek, Gemini)?** See **Appendix A: Using other models via Aider + OpenRouter** at the end of this handout. It's a self-contained setup you can use alongside Claude Code.
 :::
 
 ---
 
-# Part 1: What You Will Build Today
+# Part 1: What you will build today
 
-## The Task
+## The task
 
-You have inherited a **messy project folder** --- the kind every researcher has at some point. It contains:
+You have inherited a **messy project folder** — the kind every researcher has at some point. It contains:
 
 - R scripts with inconsistent names (`analysis_v2_FINAL.R`, `make figs.R`)
 - No README, no master script, no documentation
 - Data files mixed with code
 - Hardcoded file paths and commented-out code
 - No dependency management
-- Exploratory scripts that should not be in a final package
+- Exploratory scripts mixed with the final analysis
 
-Your job: **use an AI coding agent to transform this mess into a publication-ready replication package** that meets the standards of the American Economic Association (AEA).
+Your job: **use Claude Code to transform this mess into a publication-ready replication package** that meets the standards of the American Economic Association (AEA).
 
-## The Data
+## The data
 
-The project uses the actual replication data from **Kessler & Roth (2025)**, "Increasing Organ Donor Registration as a Means to Increase Transplantation: An Experiment with Actual Organ Donor Registrations" (AEJ: Economic Policy, [openICPSR 195641](https://www.openicpsr.org/openicpsr/project/195641)). The experiment tested whether changing how organ donor registration questions are framed (opt-in vs. active choice) affects real registration decisions.
+The project uses the actual replication data from **Kessler & Roth (2025)**, "Increasing Organ Donor Registration as a Means to Increase Transplantation: An Experiment with Actual Organ Donor Registrations" (AEJ: Economic Policy, [openICPSR 195641](https://www.openicpsr.org/openicpsr/project/195641)). The experiment tested whether changing how organ-donor registration questions are framed (opt-in vs. active choice) affects real registration decisions.
 
-The messy folder contains three Stata datasets (`.dta`) and two raw CSV files, mixed together with no organization:
+The messy folder contains three Stata datasets (`.dta`) and two raw CSV files, mixed with seven R scripts of varying quality and a `notes.txt`:
 
 | File | Description | Observations |
 |------|-------------|-------------|
-| `1_experiment_clean.dta` | Lab experiment waves 1--3 (real registrations) | 1,043 |
+| `1_experiment_clean.dta` | Lab experiment waves 1–3 (real registrations) | 1,043 |
 | `2_nextofkin_clean.dta` | Next-of-kin experiment (MTurk) | 803 |
-| `3_dmv_quarterly_clean.dta` | State-level DMV registration panel (51 states) | 1,416 |
-| `dmv_quarterly_raw.csv` | Raw quarterly DMV data | --- |
-| `nextofkin_raw.csv` | Raw next-of-kin Qualtrics data | --- |
+| `3_dmv_quarterly_clean.dta` | State-level DMV registration panel | 1,416 |
+| `dmv_quarterly_raw.csv` | Raw quarterly DMV data | — |
+| `nextofkin_raw.csv` | Raw next-of-kin Qualtrics data | — |
 
-And seven R scripts of varying quality, plus a `notes.txt` with scattered reminders.
-
-## What a Finished Package Looks Like
+## What a finished package looks like
 
 By the end, you will have:
 
@@ -67,295 +67,203 @@ replication_package/
 ├── LICENSE.txt               # MIT for code, CC-BY for data
 ├── Makefile                  # One command reproduces everything
 ├── master.R                  # Runs all scripts in correct order
+├── CLAUDE.md                 # The briefing
+├── .claude/
+│   ├── settings.json         # Permission allow-list + hooks
+│   └── commands/
+│       ├── check-package.md  # Custom skill: AER compliance check
+│       └── referee.md        # Custom skill: referee-2 audit
 ├── code/
 │   ├── 00_setup.R            # Install/load packages
 │   ├── 01_descriptive.R      # Table 1: summary statistics
-│   ├── 02_main_analysis.R    # Tables 2-3: treatment effects
+│   ├── 02_main_analysis.R    # Tables 2–3: treatment effects
 │   ├── 03_nok_analysis.R     # Table 4: next-of-kin results
 │   ├── 04_dmv_analysis.R     # Table 5: state-level DiD
 │   ├── 05_robustness.R       # Appendix robustness checks
 │   └── 06_figures.R          # All figures
 ├── data/
-│   ├── raw/                  # Original CSV files
+│   ├── raw/                  # Original CSV/Stata files
 │   └── README_data.md        # Variable descriptions
-├── output/
-│   ├── tables/               # LaTeX and CSV tables
-│   └── figures/              # PDF and PNG figures
-└── CLAUDE.md                 # (bonus) Agent instructions
+└── output/
+    ├── tables/               # LaTeX and CSV tables
+    └── figures/              # PDF and PNG figures
 ```
 
 ---
 
-# Part 2: Meet the Agents
+# Part 2: Claude Code setup {#setup}
 
-## Claude Code
+Skip this part if you did Day 1 and Claude Code is already authenticated. Otherwise, ten minutes gets you from zero to an authenticated session.
 
-[Claude Code](https://code.claude.com/docs) is Anthropic's terminal-native coding agent. It reads files, writes code, runs commands, sees errors, and iterates --- all autonomously.
+Two payment paths.
 
-**Key features for researchers:**
+## Track A. Claude Max (flat subscription)
 
-| Feature | What It Does |
-|---------|-------------|
-| **CLAUDE.md** | A Markdown file the agent reads on startup. Your "briefing document." |
-| **`/plan`** | Enters planning mode --- the agent drafts a step-by-step approach for your approval before executing. |
-| **`/` (type slash)** | Browse all available commands and skills. |
-| **`/insights`** | Shows things the agent has learned about your project during this session. |
-| **`/init`** | Auto-generates a CLAUDE.md by scanning your project. Great for getting started. |
-| **Permission modes** | Control what the agent is allowed to do without asking. |
+Good if you expect heavy daily use.
 
-**Starting Claude Code:**
+1. **Subscribe.** Open [claude.ai/settings/plans](https://claude.ai/settings/plans), pick **Max 5×** or **Max 20×**.
+2. **Enter the container.** `docker exec -it econ-replication-agent bash`
+3. **Log in.**
 
 ```bash
-# Inside your Docker container:
-claude                          # interactive mode
-claude --model opus --verbose   # use Opus model, show thinking
-claude --dangerously-skip-permissions  # full autonomy (use with care!)
+claude login
 ```
 
-**Useful keyboard shortcuts (inside Claude Code):**
+A browser window opens for OAuth; the token is stored in the container. On a headless server, use `claude login --no-browser` for a paste-in flow.
+
+## Track B. API tokens (pay-as-you-go)
+
+Good if you want to start small.
+
+1. **Sign up** at [console.anthropic.com](https://console.anthropic.com).
+2. **Add \$5 credit.** Billing → Add credits.
+3. **Create an API key** with a spend cap. Workspaces → API Keys → Create. Name it `workshop-day2`, set a hard ceiling (e.g. \$5). Copy the key immediately; you cannot view it again.
+4. **Confirm privacy settings** (Settings → Privacy). Training opt-out is default on API; confirm the toggle.
+5. **Export and verify.**
+
+```bash
+docker exec -it econ-replication-agent bash
+export ANTHROPIC_API_KEY=sk-ant-...
+
+claude
+▸ /cost
+```
+
+`/cost` should now show tokens. You're wired up.
+
+## First session: what to check
+
+```
+▸ /help             # list all built-in commands
+▸ /model            # confirm which Claude model is active
+▸ /cost             # confirm billing is wired up
+```
+
+**Expected cost for today:** \$2–5 on API for a full messy-project build on Sonnet; just session time on Max.
+
+---
+
+# Part 3: Claude Code, in one page
+
+The features that matter most for research workflows.
+
+## Slash commands
+
+| Command | What it does |
+|---------|-------------|
+| `/help` | Full command list |
+| `/init` | Auto-draft a `CLAUDE.md` from the repo |
+| `/plan` | Enter planning mode — drafts a plan, waits for approval |
+| `/compact` | Compress the conversation to save context |
+| `/clear` | Clear history (keep files). Agent re-reads `CLAUDE.md` on the next message. |
+| `/model <name>` | Switch opus / sonnet / haiku |
+| `/cost` | Session cost on API, or "uses Max" |
+| `/your-skill` | Run a custom command from `.claude/commands/` |
+
+## Keyboard shortcuts
 
 | Shortcut | Action |
-|----------|--------|
-| `Ctrl+O` | Toggle verbose output (shows thinking) |
-| `Ctrl+C` | Cancel current generation / exit |
-| `Esc` `Esc` | Rewind to a previous point |
+|---|---|
+| `Ctrl+O` | Toggle verbose output (show agent thinking) |
+| `Ctrl+C` | Cancel current generation |
+| `Esc Esc` | Rewind to a previous point |
 
-## Gemini CLI
-
-[Gemini CLI](https://github.com/google-gemini/gemini-cli) is Google's terminal coding agent. It follows a similar pattern: reads instructions, executes commands, iterates on errors.
-
-**Key features:**
-
-| Feature | What It Does |
-|---------|-------------|
-| **GEMINI.md** | Equivalent of CLAUDE.md --- instructions read on startup. |
-| **`/plan`** | Enters planning mode (added in v0.29). |
-| **`/memory`** | Manage persistent project memories. |
-| **Sandbox mode** | `gemini -s` runs in a sandboxed environment. |
-| **1M token context** | Gemini's huge context window (1 million tokens) handles very large codebases. |
-| **Free tier** | Generous free tier with Gemini API key (no subscription needed). |
-
-**Starting Gemini CLI:**
+## Starting modes
 
 ```bash
-# Inside your Docker container:
-gemini                    # interactive mode
-gemini -s                 # sandboxed mode (safer)
+claude                                  # interactive, asks before each bash command
+claude --model opus                     # start with Opus (e.g. for /plan)
+claude --dangerously-skip-permissions   # full autonomy — reasonable inside Docker
 ```
 
-## Codex CLI
+## Useful things you can ask once and reuse
 
-[Codex CLI](https://github.com/openai/codex) is OpenAI's open-source terminal coding agent. Written in Rust, it features OS-level sandboxing and a hierarchical instruction file system.
-
-**Key features:**
-
-| Feature | What It Does |
-|---------|-------------|
-| **AGENTS.md** | Equivalent of CLAUDE.md --- hierarchical discovery from root to project directory. |
-| **Sandbox** | OS-level sandboxing via Seatbelt (macOS), Landlock + seccomp (Linux). Network disabled by default. |
-| **`--full-auto`** | Full autonomy mode (applies all changes without asking). |
-| **Profiles** | Named configurations in `~/.codex/config.toml` for different workflows. |
-| **Open source** | Apache 2.0 license, community-extensible. |
-
-**Starting Codex CLI:**
-
-```bash
-# Inside your Docker container:
-codex                          # interactive mode (suggest approval policy)
-codex --full-auto              # full autonomy (applies all changes)
-codex --full-auto --model gpt-5.3-codex  # specific model + full autonomy
-```
-
-## Feature Comparison
-
-| Capability | Claude Code | Gemini CLI | Codex CLI |
-|-----------|------------|-----------|-----------|
-| Instructions file | `CLAUDE.md` | `GEMINI.md` | `AGENTS.md` |
-| Planning mode | `/plan` | `/plan` (v0.29+) | `/plan` |
-| Permission control | 3 modes + settings.json | `-s` sandbox + `--approval-mode` | 3 policies + OS sandbox |
-| Slash commands | `/plan`, `/compact`, `/cost`, ... | `/plan`, `/memory`, `/compress` | `/plan`, `/compact`, `/diff`, ... |
-| Custom skills/commands | `.claude/skills/` or `.claude/commands/` | `.gemini/commands/` (TOML) | AGENTS.md-based |
-| Model selection | `--model opus/sonnet/haiku` | Uses configured Gemini model | `--model` (gpt-5.x-codex family) |
-| Context management | `/compact` (summarize & continue) | `/compress` + 1M token window | Automatic checkpointing |
-| Session memory | Auto within session | `/memory` (persistent) | Auto within session |
-
-::: {.callout-tip}
-## Which agent should I use?
-All three agents can complete today's exercise. **Choose the one you have access to** (Claude Max subscription, Gemini API key, or OpenAI API key). If you have multiple, try one for the first half and switch to compare the experience. Gemini CLI has a generous free tier with no subscription needed.
-:::
+- **`/init`** — drafts a first-pass `CLAUDE.md` by scanning the repo.
+- **Custom skills** — drop Markdown files in `.claude/commands/`; they become slash commands.
+- **Hooks** — pre/post-tool shell commands in `.claude/settings.json`; the harness enforces them.
+- **Subagents** — for independent subtasks ("refactor file A while you refactor file B"), run in parallel.
 
 ---
 
-# Part 3: Instruction Files --- Your Agent's Brain
+# Part 4: The instruction file — your agent's brain {#instruction-file}
 
-## What Are Instruction Files?
+## Same file, many names
 
-Each agent reads a Markdown file from your project root on startup:
-
-| Agent | File | Discovery |
+| Agent | File it reads | Discovery |
 |-------|------|-----------|
-| Claude Code | `CLAUDE.md` | Project root, then parent directories up to `/` |
+| **Claude Code** | `CLAUDE.md` | Project root, then up the tree to `/` |
+| Aider | `CONVENTIONS.md` | Via `--read` or `.aider.conf.yml` |
 | Gemini CLI | `GEMINI.md` | Project root |
-| Codex CLI | `AGENTS.md` | Hierarchical: root `~/.codex/AGENTS.md` → parent dirs → project dir (all merged) |
+| Codex CLI | `AGENTS.md` | Hierarchical |
 
-Think of these as a **detailed briefing** you hand to a new research assistant on their first day. The agent reads them automatically --- you never need to paste them into the conversation.
+**The content is identical.** `cp CLAUDE.md CONVENTIONS.md` literally works.
 
-## Why Instruction Files Matter
+Think of these as a **detailed briefing** you hand to a new research assistant on their first day. The agent reads them automatically — you never paste them into the chat.
 
-Without an instruction file, the agent will:
+## Why the briefing matters
 
-- Not know the project's goals or context
-- Make arbitrary decisions about file organization
-- Use whatever coding style it prefers
-- Not know your field's conventions (AER formatting, clustering choices, etc.)
+Without it, the agent will:
 
-With a good instruction file, the agent will:
+- Not know the project's goals or context.
+- Make arbitrary decisions about file organisation.
+- Use whatever coding style it prefers (your adviser won't).
+- Not know your field's conventions (AER formatting, clustering choices, etc.).
 
-- Follow your exact specifications
-- Use the right packages and methods
-- Produce output in the format you need
-- Handle edge cases the way you want
+With a good briefing, the agent will:
 
-## Anatomy of a Good Instruction File
+- Follow your exact specifications.
+- Use the right packages and methods.
+- Produce output in the format you need.
+- Handle edge cases the way you want.
 
-All three agents follow the same general template:
+## Anatomy of a good briefing
+
+Six sections, in roughly this order:
 
 ```markdown
 # Project Name
 
 ## Mission
-One paragraph: what is this project and what should the agent achieve?
+One paragraph. What is this project? What should the agent achieve?
 
 ## Principles
-Numbered list of non-negotiable rules.
+Numbered list of non-negotiable rules. Short. Unambiguous.
 
 ## Project Structure
-Show the expected directory layout.
-
-## Tasks / Phases
-What needs to be done, in what order.
+Show the expected directory tree.
 
 ## Technical Specifications
-Packages to use, output formats, coding style.
+Packages to use, output formats, coding style, SE specifications.
 
-## Known Issues / Pitfalls
-Domain-specific gotchas the agent should watch for.
+## Don'ts
+What must never happen ("never delete data/raw/", "no install.packages()
+outside 00_setup.R", "no hardcoded absolute paths").
 
 ## Communication Protocol
-What to do when stuck, where to log progress.
+What to do when stuck. Where to log decisions for handoff between sessions.
 ```
 
-## Best Practices for Instruction Files
-
-These tips apply to CLAUDE.md, GEMINI.md, and AGENTS.md alike:
-
-1. **Be specific, not vague.** "Use `modelsummary()` with `output = 'latex'`" beats "make nice tables."
-2. **Show the expected directory layout.** A tree diagram removes ambiguity about where files go.
-3. **State what NOT to do.** "Never delete files in `data/raw/`" prevents costly mistakes.
-4. **Use emphasis for critical rules.** **Bold** or ALLCAPS for non-negotiable constraints --- agents pay more attention.
-5. **Keep it concise.** Long instruction files dilute important rules. Aim for 50--200 lines.
-6. **Update as the project evolves.** Your instruction file is a living document --- revise it as you learn what works.
-7. **Use `/init` (Claude Code) to bootstrap.** Running `claude /init` auto-generates a CLAUDE.md by scanning your project. Edit the result to add your domain-specific rules.
-
-::: {.callout-tip}
-## Agent-specific tips
-
-**Claude Code:** You can have multiple CLAUDE.md files at different levels. A `~/.claude/CLAUDE.md` sets global preferences (e.g., "always use tidyverse"), while a project-level CLAUDE.md adds project-specific rules. Both are loaded.
-
-**Gemini CLI:** Use `/memory add "always use fixest for regressions"` to persist preferences across sessions. Gemini also reads `GEMINI.md` from the working directory on startup.
-
-**Codex CLI:** AGENTS.md files are discovered hierarchically: `~/.codex/AGENTS.md` → parent directories → project root. Rules cascade from general to specific. Configure default approval mode in `~/.codex/config.toml`.
-:::
-
-## Writing Your CLAUDE.md for Today's Exercise
-
-Here is a CLAUDE.md you can use for the replication package task. You should **read it carefully, understand each section, then customize it** to your preferences.
+## A full `CLAUDE.md` for today's exercise
 
 ```{.markdown filename="CLAUDE.md"}
 # Replication Package Agent
 
 ## Mission
 Transform the messy project folder into an AER-compliant replication
-package. Reorganize code, write documentation, create a master script,
+package. Reorganise code, write documentation, create a master script,
 and produce all tables and figures in a clean, reproducible pipeline.
 
 ## Principles
-1. Never delete the original data files. Copy them to data/raw/.
+1. Never delete or modify the original data files. Copy to data/raw/.
 2. All code must run from the project root using relative paths.
 3. Use R with tidyverse conventions. Load packages with library().
 4. Output tables as both .csv and .tex (using modelsummary).
 5. Output figures as both .pdf and .png (300 DPI).
-6. Follow the AEA README template structure exactly.
-7. Document every decision in the README.
-
-## Project Structure
-replication_package/
-├── README.md
-├── LICENSE.txt
-├── Makefile
-├── master.R
-├── code/
-│   ├── 00_setup.R
-│   ├── 01_descriptive.R
-│   ├── 02_main_analysis.R
-│   ├── 03_nok_analysis.R
-│   ├── 04_dmv_analysis.R
-│   ├── 05_robustness.R
-│   └── 06_figures.R
-├── data/
-│   ├── raw/
-│   └── README_data.md
-└── output/
-    ├── tables/
-    └── figures/
-
-## Technical Specifications
-- R packages: tidyverse, fixest, modelsummary, ggplot2, marginaleffects
-- Tables: modelsummary() with output formats "latex" and "csv"
-- Figures: ggsave() with width=8, height=5, dpi=300
-- Standard errors: heteroskedasticity-robust (vcov = "hetero")
-- Regression tables: report coefficients with SEs in parentheses
-
-## AER README Requirements
-The README.md must follow the Social Science Data Editors template:
-1. Overview (title, authors, data/software summary)
-2. Data Availability Statement
-3. Dataset List (file, source, provided yes/no)
-4. Computational Requirements (software, packages, runtime)
-5. Description of Programs (what each script does)
-6. Instructions to Replicators (step-by-step)
-7. Table of Tables/Figures → Programs mapping
-
-## Communication Protocol
-- If a script fails, log the error and continue with other scripts.
-- After completing all tasks, summarize what was done and any issues.
-```
-
-::: {.callout-tip}
-## Use an LLM to write your instruction file!
-The meta-move: **use the chatbot version (claude.ai, gemini.google.com, chatgpt.com) to draft the instructions for the terminal agent.** Tell it about your project, your field's conventions, and your preferences. Iterate: "Add a section about X" / "Make the output format more specific."
-:::
-
-## The GEMINI.md --- Gemini CLI Pendant
-
-Gemini CLI reads a `GEMINI.md` file on startup. The content is **identical in structure** to a CLAUDE.md. Here is the same example adapted for Gemini CLI:
-
-```{.markdown filename="GEMINI.md"}
-# Replication Package Agent
-
-## Mission
-Transform the messy project folder into an AER-compliant replication
-package. Reorganize code, write documentation, create a master script,
-and produce all tables and figures in a clean, reproducible pipeline.
-
-## Principles
-1. Never delete the original data files. Copy them to data/raw/.
-2. All code must run from the project root using relative paths.
-3. Use R with tidyverse conventions. Load packages with library().
-4. Output tables as both .csv and .tex (using modelsummary).
-5. Output figures as both .pdf and .png (300 DPI).
-6. Follow the AEA README template structure exactly.
-7. Document every decision in the README.
+6. Follow the AEA Social Science Data Editors README template exactly.
+7. Document every non-obvious decision in the README.
+8. Use fixest::feols() for regressions, not lm().
+9. Standard errors: heteroskedasticity-robust (vcov = "hetero") unless
+   a script comment says otherwise.
 
 ## Project Structure
 replication_package/
@@ -382,77 +290,69 @@ replication_package/
 - R packages: tidyverse, haven, fixest, modelsummary, ggplot2, marginaleffects
 - Tables: modelsummary() with output formats "latex" and "csv"
 - Figures: ggsave() with width=8, height=5, dpi=300
-- Standard errors: heteroskedasticity-robust (vcov = "hetero")
 - Data files are Stata .dta format — read with haven::read_dta()
+- Set seed at the top of every script that randomises anything
+  (set.seed(20260422))
 
 ## AER README Requirements
 The README.md must follow the Social Science Data Editors template:
 1. Overview
-2. Data Availability Statement
-3. Dataset List
-4. Computational Requirements
-5. Description of Programs
-6. Instructions to Replicators
-7. Table/Figure → Program mapping
+2. Data Availability and Provenance Statements
+   (Statement about Rights, Summary of Availability, Dataset List)
+3. Computational Requirements (software, packages with versions, runtime)
+4. Description of Programs (what each script does)
+5. Instructions to Replicators (step-by-step)
+6. List of Tables and Programs (every output mapped to its script)
+7. References
+
+## Don'ts
+- Never modify files in data/raw/.
+- No install.packages() outside 00_setup.R.
+- No hardcoded absolute paths.
+- No `setwd()` calls.
+- No committing large data files to git — use .gitignore.
+
+## Communication Protocol
+- If a script fails: log the error, continue with independent tasks,
+  summarise all errors at the end.
+- Write a DECISIONS.md at the project root for non-obvious choices
+  ("I dropped quick_look.R because it's exploratory and not referenced
+  anywhere").
+- At the end of a session, append a short note to DECISIONS.md so the
+  next session (or the next agent) can pick up without re-reading the
+  full chat history.
 ```
 
-::: {.callout-note}
-## What changes between CLAUDE.md and GEMINI.md?
-**Nothing about the content.** Only the filename. The rules, structure, and specifications are exactly the same. You can literally copy one to the other. The same holds for Codex CLI's `AGENTS.md`.
+## Best practices
 
-```bash
-# Write once, use everywhere:
-cp CLAUDE.md GEMINI.md
-cp CLAUDE.md AGENTS.md
-```
+1. **Be specific, not vague.** "Use `modelsummary()` with `output = 'latex'`" beats "make nice tables."
+2. **Show the expected directory layout.** A tree diagram removes ambiguity.
+3. **State what NOT to do.** "Never delete files in `data/raw/`" prevents costly mistakes.
+4. **Use emphasis for critical rules.** **Bold** or ALLCAPS for non-negotiable constraints.
+5. **Keep it concise.** Long instruction files dilute important rules. Aim for 50–250 lines.
+6. **Update as you learn.** The briefing is a living document.
+7. **Use `/init` to bootstrap.** Then edit.
+8. **Meta move:** draft with a chatbot. Paste a description of your project into claude.ai, ask for the six sections, iterate.
+
+::: {.callout-tip}
+## Multi-level `CLAUDE.md`
+
+Claude Code discovers `CLAUDE.md` up the directory tree. A `~/.claude/CLAUDE.md` sets *global* preferences ("always use tidyverse"); a project-level `CLAUDE.md` adds *project-specific* rules. Both are loaded and merged. Put taste preferences at the global level; put project conventions in the project. Every Claude Code session in every project then behaves consistently without re-specifying your house style.
 :::
-
-## Gemini CLI Extras: `/memory`
-
-One unique feature of Gemini CLI is persistent memory across sessions. Use it to save preferences:
-
-```
-> /memory add "Always use fixest for regressions, not lm()"
-> /memory add "Standard errors: heteroskedastic-robust unless otherwise specified"
-> /memory add "Output format: tables as .tex + .csv, figures as .pdf + .png at 300 DPI"
-```
-
-These memories persist even after you close and reopen Gemini CLI. They complement the GEMINI.md by storing preferences you discover during a session.
-
-## Codex CLI Extras: `config.toml`
-
-Codex CLI uses `~/.codex/config.toml` for persistent configuration beyond AGENTS.md:
-
-```{.toml filename="~/.codex/config.toml"}
-model = "gpt-5.3-codex"
-approval_policy = "on-request"
-
-[profiles.econ-replication]
-model = "gpt-5.3-codex"
-approval_policy = "never"
-```
-
-Start Codex with a specific profile: `codex --profile econ-replication`
 
 ---
 
-# Part 4: Permission Modes --- When to Trust the Agent
+# Part 5: Permissions, planning, skills, hooks {#claude-features}
 
-## Why Permissions Matter
+## Permission modes
 
-By default, Claude Code asks for your approval before running **every** shell command. This is safe but slow. Understanding permission modes lets you find the right balance between safety and speed.
-
-## The Three Permission Modes
-
-| Mode | How to Activate | What Happens |
+| Mode | How to activate | What happens |
 |------|----------------|-------------|
-| **Default** | `claude` | Agent asks before each bash command. You approve/deny individually. |
-| **Allow-list** | `.claude/settings.json` | You pre-approve specific command patterns. Agent asks for everything else. |
-| **Dangerously skip** | `claude --dangerously-skip-permissions` | Agent runs **everything** without asking. Full autonomy. |
+| **Default** | `claude` | Agent asks before each bash command |
+| **Allow-list** | `.claude/settings.json` | You pre-approve specific patterns |
+| **Skip all** | `claude --dangerously-skip-permissions` | Runs everything without asking |
 
-## Setting Up an Allow-list
-
-Create `.claude/settings.json` in your project root:
+An allow-list in `.claude/settings.json`:
 
 ```{.json filename=".claude/settings.json"}
 {
@@ -468,91 +368,43 @@ Create `.claude/settings.json` in your project root:
       "Bash(make:*)",
       "Write(*)",
       "Read(*)"
+    ],
+    "deny": [
+      "Bash(rm -rf /*)",
+      "Bash(git push:*)",
+      "Write(data/raw/**)"
     ]
   }
 }
 ```
 
-This lets the agent run R scripts, create directories, copy files, and read/write files --- without asking. It will still ask before doing anything not on the list (e.g., `rm`, `pip install`, `git push`).
-
-## When to Use Each Mode
-
-| Situation | Recommended Mode |
-|-----------|-----------------|
-| First time using an agent | **Default** --- watch and learn what it does |
-| Reorganizing code (today's exercise) | **Allow-list** --- let it work, block destructive commands |
-| You understand the task and trust the CLAUDE.md | **Dangerously skip** --- maximum speed |
-| Agent is accessing the internet or external APIs | **Default** --- review each action |
-| Working inside Docker (sandbox) | **Dangerously skip** is safer here --- the container isolates you |
+The agent can run R, create directories, copy files, read/write — but can't `rm -rf`, `git push`, or modify `data/raw/`.
 
 ::: {.callout-important}
-## "Dangerously skip" + Docker = reasonable risk
-Inside a Docker container, the agent **cannot escape the sandbox**. Your host files are safe. This makes `--dangerously-skip-permissions` much less dangerous than running it on your bare laptop. For today's exercise inside Docker, this is a reasonable choice.
+## "Dangerously skip" + Docker = reasonable
+Inside a Docker container, the agent *cannot* escape the sandbox. The host's files are safe. `claude --dangerously-skip-permissions` is appropriate for today.
 :::
 
-## Gemini CLI Permissions
+## Planning mode
 
-Gemini CLI offers several approval modes:
-
-```bash
-gemini                              # default: asks before commands
-gemini -s                            # sandbox mode: restricted environment
-gemini --approval-mode=auto_edit     # auto-approve file edits, ask for shell commands
-gemini --approval-mode=yolo          # full autonomy (like --dangerously-skip-permissions)
-```
-
-## Codex CLI Permissions
-
-Codex CLI uses OS-level sandboxing (Seatbelt on macOS, Landlock + seccomp on Linux) combined with three approval policies:
-
-| Policy | Flag | Behavior |
-|--------|------|----------|
-| **Untrusted** | (default) | Agent asks before most actions |
-| **On-request** | `--ask-for-approval on-request` | Only asks when the agent itself is uncertain |
-| **Full-auto** | `--full-auto` | Everything runs without asking. Network disabled by sandbox. |
-
-```bash
-codex                          # suggest mode (safest)
-codex --full-auto              # full autonomy + OS sandbox
-```
-
-::: {.callout-note}
-## Codex CLI's unique sandbox
-Unlike Claude Code and Gemini CLI, Codex CLI uses **OS-level sandboxing** that restricts network access and filesystem writes even in full-auto mode. The agent can only write to the current project directory. This makes `--full-auto` safer than the equivalent modes in other agents.
-:::
-
----
-
-# Part 5: Planning Mode --- Think Before You Act
-
-## Why Planning Matters
-
-Complex tasks benefit from planning before execution. Without planning, the agent might:
-
-- Start reorganizing files before understanding the full scope
-- Miss dependencies between scripts
-- Create a structure that needs to be redone later
-
-## Using `/plan` in Claude Code
-
-Type `/plan` in the Claude Code prompt to enter planning mode:
+Complex tasks benefit from planning before execution. Without it, the agent might start reorganising files before understanding the full scope, miss dependencies between scripts, or build a structure that needs to be redone.
 
 ```
-you> /plan
+▸ /plan
 
-Please analyze the messy_project folder and create a plan to
-reorganize it into an AER-compliant replication package.
+Analyse all files in this project folder. Create a detailed plan to
+reorganise everything into an AER-compliant replication package.
 ```
 
-In planning mode, the agent will:
+In planning mode, the agent:
 
-1. **Read all files** in the project
-2. **Analyze dependencies** between scripts
-3. **Draft a step-by-step plan** with specific actions
-4. **Present the plan** for your review
-5. **Wait for your approval** before executing anything
+1. Reads all files in the project.
+2. Analyses dependencies between scripts.
+3. Drafts a step-by-step plan with specific actions.
+4. Presents the plan for your review.
+5. Waits for your approval before executing anything.
 
-You can then:
+You can:
 
 - **Approve**: "Looks good, proceed."
 - **Modify**: "Skip the robustness checks. Rename Table 5 to Table 4."
@@ -560,12 +412,11 @@ You can then:
 
 ::: {.callout-tip}
 ## When to use `/plan`
-Use `/plan` when:
+Use it when:
 
 - The task has many steps (like today's exercise)
 - You want to review the approach before execution
 - The agent might make structural decisions you want to influence
-- You are not sure what the agent will do
 
 You do NOT need `/plan` for:
 
@@ -574,200 +425,112 @@ You do NOT need `/plan` for:
 - Questions about the project ("what packages does this use?")
 :::
 
-## Planning with Gemini CLI
+## Custom skills
 
-Gemini CLI now supports `/plan` (added in v0.29). Use it the same way as in Claude Code:
-
-```
-> /plan
-> Analyze all files in messy_project/ and create a detailed plan
-  for reorganizing into an AER-compliant replication package.
-```
-
-If your Gemini CLI version does not have `/plan`, explicitly ask for a plan in your prompt:
-
-```
-> Before doing anything, analyze all files in messy_project/ and
-  create a detailed plan for reorganizing into an AER-compliant
-  replication package. Present the plan and wait for my approval
-  before executing.
-```
-
-## Planning with Codex CLI
-
-Codex CLI also supports `/plan`. Use it the same way:
-
-```
-> /plan
-> Analyze all files in messy_project/. Create a detailed plan
-  to reorganize into an AER-compliant replication package per AGENTS.md.
-```
-
----
-
-# Part 6: Slash Commands and Skills
-
-## Built-in Commands in Claude Code
-
-Type `/` to browse all available commands and skills:
-
-| Command | What It Does |
-|---------|-------------|
-| `/plan` | Enter planning mode |
-| `/help` | Usage help and available commands |
-| `/insights` | Show what the agent learned about your project |
-| `/status` | Show current session status |
-| `/help` | General help |
-| `/clear` | Clear conversation history |
-| `/compact` | Compress conversation to save context |
-| `/cost` | Show API usage for this session |
-| `/model` | Switch model mid-session |
-| `/config` | View/change configuration |
-
-## The `/insights` Command
-
-As the agent works, it builds up knowledge about your project. Type `/insights` to see what it has learned:
-
-```
-you> /insights
-```
-
-Example output:
-
-```
-Project Insights:
-- This project uses R with fixest for regressions
-- Data is in CSV format (3 files, ~2000 total observations)
-- The analysis covers a 2x2 experimental design (frame x info)
-- Tables should use modelsummary with heteroskedastic-robust SEs
-- The DMV analysis uses a two-way fixed effects DiD specification
-```
-
-These insights are built automatically. They help the agent maintain context, especially in long sessions where earlier conversation might be compressed.
-
-## Custom Skills
-
-You can create **project-specific slash commands** by placing Markdown files in `.claude/skills/` (recommended) or `.claude/commands/` (legacy, still works):
+Drop a Markdown file into `.claude/commands/` and it becomes a project-scoped slash command.
 
 ```bash
-mkdir -p .claude/commands   # simple single-file commands
-# or
-mkdir -p .claude/skills/check-package   # skill with supporting files
+mkdir -p .claude/commands
 ```
 
-Example: Create a `/check-package` command:
+Example — a `/check-package` command:
 
 ```{.markdown filename=".claude/commands/check-package.md"}
-Verify that the replication package is AER-compliant:
+Verify that the replication package is AER-compliant. For each item
+below, report pass/fail with a one-line justification.
 
-1. Check that README.md exists and follows the template
-2. Check that all scripts referenced in README exist
-3. Run master.R and verify it completes without errors
-4. Check that all output files (tables/, figures/) are produced
-5. Verify the Makefile works: make clean && make all
-6. Report any issues found
+1. README.md present and follows the AEA Social Science Data Editors
+   template (7 required sections).
+2. Every script referenced in README.md exists on disk.
+3. `Rscript master.R` completes without errors from a clean R session.
+4. Every table and figure listed in the README is produced in
+   output/tables/ or output/figures/.
+5. No absolute paths in any .R file (`grep -rn '/home\|C:' code/`).
+6. 00_setup.R loads every library() used across code/.
+7. data/raw/ is byte-identical to the original input (compare SHA-256).
+8. LICENSE.txt present.
+
+Finish with a numerical score: X / 8.
 ```
 
-Now you can type `/check-package` and the agent will execute this checklist.
+Type `/check-package` in Claude Code — the agent runs the checklist. Skills travel with your repo; anyone who clones it gets the same commands.
 
-Another example --- a `/compare-output` command:
+Another useful one — `/referee`:
 
-```{.markdown filename=".claude/commands/compare-output.md"}
-Compare the output of the replication package with expected results:
+```{.markdown filename=".claude/commands/referee.md"}
+You are a fresh AEA Data Editor referee. You have NOT seen this project
+before. Review the replication package at /workspace/replication_package/.
 
-1. List all files in output/tables/ and output/figures/
-2. For each table, show the key coefficients and standard errors
-3. Flag any tables that are missing or empty
-4. Summarize: how many tables/figures were produced vs. expected
+1. Is the README structured per the AEA template? List any missing
+   sections.
+2. Does `master.R` run without errors from a clean shell? (Run it.)
+3. Are all packages listed with versions (`sessionInfo()` or
+   `renv.lock`)?
+4. Are all tables/figures in the paper produced by the code?
+5. What would you ask the authors to fix?
+
+Output a structured referee report.
 ```
 
-::: {.callout-tip}
-## Skills travel with your repo
-Custom skills in `.claude/skills/` and commands in `.claude/commands/` are scoped to your project. They travel with your repository --- anyone who clones it gets the same slash commands. Skills are the newer format and support additional features like bundled reference files and automatic invocation by the agent.
-:::
+## Hooks
 
-## Gemini CLI Commands and Skills
+Hooks are shell commands that execute automatically on agent events. Configure in `.claude/settings.json`:
 
-Gemini CLI has its own set of commands:
-
-| Command | What It Does |
-|---------|-------------|
-| `/plan` | Enter planning mode (v0.29+) |
-| `/memory add "..."` | Add a persistent project memory |
-| `/memory show` | Show all saved memories |
-| `/memory refresh` | Reload memories from all GEMINI.md files |
-| `/compress` | Compress conversation to save context |
-
-**Custom commands in Gemini CLI** use `.gemini/commands/` with TOML files:
-
-```{.toml filename=".gemini/commands/check_package.toml"}
-description = "Verify AER compliance of the replication package"
-prompt = """
-Verify that the replication package is AER-compliant:
-1. Check README.md exists and follows the template
-2. Check all scripts referenced in README exist
-3. Run master.R and verify it completes without errors
-4. Check that all output files are produced
-5. Report pass/fail for each item
-"""
+```{.json filename=".claude/settings.json"}
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": { "tool": "Write", "path_glob": "code/*.R" },
+        "command": "Rscript -e 'lintr::lint(\"$CLAUDE_FILE_PATH\")'"
+      },
+      {
+        "matcher": { "tool": "Write", "path_glob": "data/raw/**" },
+        "command": "echo 'BLOCKED: data/raw/ is read-only'; exit 1"
+      }
+    ],
+    "Stop": [
+      {
+        "command": "git log --oneline -n 5"
+      }
+    ]
+  }
+}
 ```
 
-## Codex CLI Commands
+The harness runs these — the agent cannot skip them. Use cases:
 
-Codex CLI also has slash commands. Type `/` to browse them:
+- Lint R code after every file write.
+- Prevent writes to `data/raw/`.
+- Log all shell commands for reproducibility auditing.
+- Show a compact git log when a session ends.
 
-| Command | What It Does |
-|---------|-------------|
-| `/plan` | Enter planning mode |
-| `/compact` | Compress conversation |
-| `/model` | Switch model |
-| `/diff` | Show pending changes |
-
-For non-interactive use (e.g., in CI/CD), use `codex exec`:
-
-```bash
-codex exec "Verify that the replication package is AER-compliant.
-Check README, all scripts, and run master.R."
-```
-
-Codex CLI uses profiles in `~/.codex/config.toml` for different workflows:
-
-```{.toml filename="~/.codex/config.toml"}
-[profiles.econ]
-model = "gpt-5.3-codex"
-approval_policy = "on-request"
-```
-
-Activate a profile: `codex --profile econ`
+A hook you write *once* is enforced *every time*, even if the agent "forgets" a rule in `CLAUDE.md`.
 
 ---
 
-# Part 7: The AER Replication Package Standard
+# Part 6: The AER replication package standard
 
-## Why Standards Matter
+## Why standards matter
 
-The American Economic Association requires all published papers to include a replication package deposited on [openICPSR](https://www.openicpsr.org/). The AEA Data Editor reviews every package before publication. Understanding these standards is essential for any economist submitting to AEA journals.
+The American Economic Association requires all published papers to include a replication package deposited on [openICPSR](https://www.openicpsr.org/). The AEA Data Editor reviews every package before publication. Understanding these standards is essential for any economist submitting to AEA journals — and a good practice for any empirical research you want others to trust.
 
-## The AEA README Template
+## The AEA README template
 
-The AEA uses the [Social Science Data Editors' README template](https://social-science-data-editors.github.io/template_README/). Your README must include these sections:
+The AEA uses the [Social Science Data Editors' README template](https://social-science-data-editors.github.io/template_README/). Your README must include:
 
-### Required Sections
+1. **Overview**: Paper title, authors, one-paragraph summary of what the package contains.
+2. **Data Availability and Provenance Statements**:
+    a. *Statement about Rights* — certify you have permission to use and redistribute the data.
+    b. *Summary of Availability* — all public / some restricted / none available.
+    c. *Dataset List* — table mapping data files to their sources.
+3. **Computational Requirements**: Software (with versions), packages (with versions), hardware, runtime estimate.
+4. **Description of Programs**: What each script does.
+5. **Instructions to Replicators**: Numbered steps to reproduce everything.
+6. **List of Tables and Programs**: Map every table/figure to the script that produces it.
+7. **References**: Full citations for all data sources.
 
-The template has **7 main sections** (sections 2--4 below are subsections of "Data Availability"):
-
-1. **Overview**: Paper title, authors, one-paragraph summary of what the package contains
-2. **Data Availability and Provenance Statements**: Where each dataset came from, how to access it
-    a. *Statement about Rights* — certify you have permission to use and redistribute the data
-    b. *Summary of Availability* — all public / some restricted / none available
-    c. *Dataset List* — table mapping data files to their sources
-3. **Computational Requirements**: Software (with versions), packages (with versions), hardware, runtime estimate
-4. **Description of Programs**: What each script does
-5. **Instructions to Replicators**: Numbered steps to reproduce everything
-6. **List of Tables and Programs**: Map every table/figure to the script that produces it
-7. **References**: Full citations for all data sources
-
-### Computational Requirements Checklist
+### Computational requirements checklist
 
 Your README must specify:
 
@@ -778,7 +541,7 @@ Your README must specify:
 - [ ] Storage requirements (e.g., "< 25 MB")
 - [ ] Whether a random seed is set (and where)
 
-## Other Required Files
+## Other required files
 
 | File | Purpose |
 |------|---------|
@@ -789,29 +552,216 @@ Your README must specify:
 
 ::: {.callout-important}
 ## The cardinal rule
-"The replication package should reproduce the tables and figures, as well as any in-text numbers, by running code without manual intervention, starting from the raw data." --- AEA Data Editor
+"The replication package should reproduce the tables and figures, as well as any in-text numbers, by running code without manual intervention, starting from the raw data." — AEA Data Editor
 :::
 
-## Common Compliance Failures
+## Common compliance failures
 
-The AEA Data Editor rejects packages for these reasons:
-
-| Problem | How to Avoid |
+| Problem | How to avoid |
 |---------|-------------|
 | Missing or incomplete README | Use the template, fill every section |
-| Code does not run | Test from a clean environment |
+| Code does not run | Test from a *clean* environment |
 | Missing data citations | Cite every dataset in the manuscript's references |
 | No master script | Create `master.R` that sources all scripts in order |
 | Hardcoded paths | Use relative paths from the project root |
 | Missing dependencies | List every package in `00_setup.R` with version |
 | Exploratory files included | Remove scratch scripts, keep only final code |
-| Manual steps required | Automate everything; the only manual step should be setting the root path |
+| Manual steps required | Automate everything |
 
 ---
 
-# Part 8: Hands-On Exercise
+# Part 7: Research best practices with AI agents {#best-practices}
 
-## Step 1: Get the Workshop Files
+This is the section that makes the difference between using an agent *competently* and using one *recklessly*. Read it before the hands-on exercise.
+
+## 1. Verify, don't trust
+
+Every agent output is a **first draft from a capable but junior RA**. The agent is fast, confident, and occasionally wrong in ways that look right.
+
+- **Read every diff.** Before accepting a change, look at it. If you hit "yes" reflexively, you are not doing research — you are hoping.
+- **Run the code yourself from a clean shell.** Don't rely on "agent says it works." Open a fresh terminal, `cd replication_package`, `Rscript master.R`, read every line of output.
+- **Spot-check against priors.** If a regression now says the effect is +0.12 when your prior result was +0.08, stop and figure out why before moving on. Know your magnitudes.
+- **Don't trust agent summaries of what it did.** They are narratives, not audits. `git log` and a diff are the audit trail.
+
+> If you would check an RA's first output, you check the agent's.
+
+## 2. Delegate the paperwork, keep the research
+
+AI coding agents win on the paperwork *around* the research, not the research itself.
+
+**Delegate to the agent:**
+
+- Inventory / audit of an unknown folder.
+- Bulk rewrites (rename, reformat, port API).
+- Glue code (download, parse, save, plot).
+- Documentation drafts (README, script headers, data dictionaries).
+- Running → failing → fixing loops.
+- Generating variants for comparison (three plot styles, two SE specifications).
+
+**Keep for yourself:**
+
+- Research question and motivation.
+- Identification strategy.
+- Choice of estimator and standard errors.
+- Interpretation of coefficients.
+- Final-paper prose.
+- Anything involving sensitive data.
+
+The failure mode is offloading the *wrong* decisions to the agent — asking it to pick a clustering level or choose whether to weight. Don't. Make that decision yourself, write it into `CLAUDE.md` as a rule, and let the agent execute it.
+
+## 3. Data privacy and IRB
+
+Cloud agents send your prompt — and everything in context — to a third-party LLM provider.
+
+**Never put these in front of a cloud agent:**
+
+- Personally identifiable data (names, addresses, precise geocodes, SSNs, NHS numbers).
+- IRB-restricted microdata.
+- Restricted-use administrative data (Census, tax records, health) under a DUA.
+- Unpublished results you don't want a model provider seeing.
+
+**Mitigations:**
+
+- **Anthropic:** training opt-out is default for API traffic. Confirm in console settings.
+- **`.claudeignore`:** add sensitive folders so the repo map doesn't scan them.
+- **Docker mount surface:** only mount what the agent needs. Keep the raw extract outside the container if you can.
+- **Local models for the really sensitive stuff:** run `ollama` locally; the Aider appendix in this handout shows how.
+- **When in doubt, don't.** There is no button that makes sending restricted data to a cloud model OK.
+
+## 4. Session hygiene: beat context degradation
+
+Claude's context window is 200k tokens (or 1M on newer models). It fills up faster than you'd think, especially when you add large files or run verbose shell commands whose output lands back in the chat.
+
+As the conversation grows, performance drops:
+
+- The agent forgets a rule stated 20 turns ago.
+- Sloppier diffs — spurious edits to files you didn't ask about.
+- Vague summaries ("I've updated the analysis") in place of concrete ones.
+
+The fix is **session hygiene**, not a bigger context window:
+
+- **`/clear`** when switching topics. The files stay; the chat resets. The agent re-reads `CLAUDE.md` on the next message.
+- **`/compact`** when the session is clearly bloated but you want to keep a summary.
+- **Short sessions over long ones.** Break the messy-project task into "reorganise", "write scripts", "write README", "run and debug" — each a separate session.
+- **Files as handoff state.** Decisions go in `DECISIONS.md` or `CLAUDE.md`, not the chat buffer.
+
+The canonical symptom of context degradation is *the agent forgetting a rule in `CLAUDE.md`*. That's your cue: `/clear`, the rule is re-read and honoured.
+
+## 5. The "referee 2" protocol
+
+The single most useful pattern for verifying research code from an agent: **a second, fresh session as an independent reviewer.**
+
+```bash
+# Terminal 1: build the package
+claude --dangerously-skip-permissions
+▸ (builds replication_package/)
+
+# Terminal 2: fresh session, clean context
+claude
+▸ You are a referee for the AEA Data Editor. Review
+  /workspace/replication_package/. Check:
+  1. Does `Rscript master.R` run without errors from a clean session?
+  2. Does the README follow the AEA template (7 sections)?
+  3. Are all tables and figures produced?
+  4. Are all packages listed with versions?
+  5. Any absolute paths? Any exploratory files left over?
+  Report pass/fail for each criterion with specific evidence.
+```
+
+Why this works:
+
+- A fresh context has **no bias** from the construction. It didn't spend an hour choosing a structure; it's just reading.
+- Running the code from a *fresh shell* surfaces hardcoded paths and missing dependencies that the building session papered over.
+
+**Variation: cross-model referee.** Build with Sonnet, review with Opus. Or use the Aider + OpenRouter appendix to audit with GPT-5 or DeepSeek Reasoner. Different brains catch different mistakes.
+
+## 6. Reproducibility first
+
+The point of an AER replication package is that *someone else*, *on a different machine*, *a year later*, can reproduce your results. Every agent decision should be evaluated against that bar.
+
+**Git is your safety net:**
+
+- Commit frequently. Hit Esc and re-prompt if a diff looks wrong before accepting.
+- Commit `CLAUDE.md` and custom skills. They're part of the repo.
+- A clean `git log` is the audit trail of the agent's work.
+
+**Environment is your truth:**
+
+- The Docker image pins R, Python, system libraries.
+- `renv::snapshot()` pins R package versions. `renv::restore()` recreates them elsewhere.
+- Always test the final package from a *clean* R session (`R --vanilla`), not your dev session.
+
+**One-command reproducibility:**
+
+- `master.R` sources every script in order.
+- `Makefile` does the same with dependency tracking. Bonus: `make clean` wipes the outputs so you can verify the build from scratch.
+
+## 7. Prompt patterns that work
+
+| # | Pattern | Example |
+|:---:|---|---|
+| 1 | **Vague → iterate** | "I want X. Ask anything unclear, then do it." |
+| 2 | **Scripts, not commands** | "Write `download_data.R`", not "download the data" |
+| 3 | **Style by reference** | "Kieran Healy's ggplot2 best practices" beats a 20-line `theme()` spec |
+| 4 | **Small iterations** | Three narrow prompts beat one 500-word prompt |
+| 5 | **Context → objective → constraints** | "This project replicates X. Refactor scripts. Relative paths only." |
+| 6 | **Show, don't tell** | A directory tree beats paragraphs of description |
+| 7 | **Reference files explicitly** | `@filename` lets Claude Code scope to specific files |
+| 8 | **Stop arguing — start over** | If the agent keeps making the same mistake, Esc, `/clear`, re-prompt. |
+
+**Weak vs. strong prompts:**
+
+| Weak | Strong |
+|-------------|---------------|
+| "Clean up this code" | "Refactor `analysis_v2_FINAL.R` into `code/02_main_analysis.R`. Replace `read.csv` with `haven::read_dta`. Use `fixest::feols()`." |
+| "Make a README" | "Write `README.md` following the AEA Social Science Data Editors template. Include all 7 required sections. List every R package used with its installed version (use `packageVersion()`)." |
+| "Fix the figures" | "In `code/06_figures.R`, change Figure 1 to `theme_minimal()`, save as both PDF and PNG at 300 DPI in `output/figures/`, filename `figure1_main.{pdf,png}`." |
+
+## 8. Model economics
+
+A messy-to-replication-package run is 20–60 minutes of agent time.
+
+**The rule of thumb for Claude Code:**
+
+- Use `/plan` on **Opus** for the initial architecture.
+- `/model sonnet` once you've approved the plan — cheaper execution.
+- `/model haiku` for tiny subsequent edits.
+
+On Max, switching is free. On API, Opus is ~5× more expensive than Sonnet; use it deliberately.
+
+**Want to compare models across providers?** The Aider + OpenRouter appendix has the architect + editor split (reasoner plans, cheap editor writes) with typical savings of 40–60% on long refactors.
+
+## 9. Keep a human in the loop for methodology
+
+An agent happily writes
+
+```r
+feols(outcome ~ treat | wave + state, data = df, vcov = "hetero")
+```
+
+without pausing on whether clustered SEs at the wave level make more sense, or whether state fixed effects absorb the treatment's identifying variation. *Don't let it decide for you.*
+
+- Write the estimator, the fixed effects, and the SE choice into `CLAUDE.md` as rules.
+- When the agent proposes a different spec, *it is asking you a question* — answer it before accepting.
+- Review regression output the same way you'd review an RA's: coefficient signs, magnitudes, sample sizes.
+
+## 10. Write progress logs for handoff
+
+Between sessions, the agent re-reads files, not the prior conversation. Use that:
+
+- Append a short note to `DECISIONS.md` whenever you or the agent makes a non-obvious choice.
+- At the end of each session, ask the agent to summarise what was done into `DECISIONS.md`. Commit it.
+- Next session: Claude Code reads `CLAUDE.md` **and** `DECISIONS.md` on startup. It picks up where you left off with no context loss.
+
+## 11. Tutor mode is real: learn by doing
+
+If you are new to Claude Code, don't *read* about it — *run* a tutor session. Load a tutor briefing as a read-only file, let the agent walk you through the workshop material by having you do the steps yourself. Progress is stored in a file, not in the chat.
+
+---
+
+# Part 8: Hands-on exercise {#hands-on}
+
+## Step 1: Get the workshop files
 
 If you haven't already, clone the workshop repository on your **host machine** (outside Docker):
 
@@ -819,16 +769,9 @@ If you haven't already, clone the workshop repository on your **host machine** (
 git clone https://github.com/AlexRieber/Workshops.git
 ```
 
-The messy project files are in `Workshops/AI_Agents/messy_project/`. You can also browse them on GitHub: [github.com/AlexRieber/Workshops/AI_Agents](https://github.com/AlexRieber/Workshops/tree/main/AI_Agents).
+The messy project files are at `Workshops/AI_Agents/messy_project/`.
 
-::: {.callout-tip}
-## Already cloned during Docker setup?
-If you cloned the repository during the Docker Setup How-To (Part 4), you already have everything. The `messy_project/` folder is at `~/Workshops/AI_Agents/messy_project/`.
-:::
-
-## Step 2: Set Up Your Workspace
-
-Copy the messy project into your Docker container's workspace and enter the container:
+## Step 2: Set up your workspace
 
 ```bash
 # Copy the messy project into the running container
@@ -836,11 +779,7 @@ docker cp ~/Workshops/AI_Agents/messy_project econ-replication-agent:/workspace/
 
 # Enter the container
 docker exec -it econ-replication-agent bash
-```
 
-Navigate to the messy project:
-
-```bash
 cd /workspace/messy_project
 ls -la
 ```
@@ -848,53 +787,42 @@ ls -la
 You should see:
 
 ```
-1_experiment_clean.dta
-2_nextofkin_clean.dta
-3_dmv_quarterly_clean.dta
-analysis_v2_FINAL.R
-dmv_analysis_v3.R
-dmv_figures.R
-dmv_quarterly_raw.csv
-figure8_nok.R
-make figs.R
-nextofkin_raw.csv
-nok_analysis.R
-notes.txt
-old_robustness_checks.R
-quick_look.R
+1_experiment_clean.dta        analysis_v2_FINAL.R
+2_nextofkin_clean.dta         dmv_analysis_v3.R
+3_dmv_quarterly_clean.dta     dmv_figures.R
+dmv_quarterly_raw.csv         figure8_nok.R
+nextofkin_raw.csv             make figs.R
+nok_analysis.R                notes.txt
+old_robustness_checks.R       quick_look.R
 Table1_descriptive.R
 ```
 
 ::: {.callout-tip}
 ## Take a moment
-Before starting the agent, **look at the files yourself**. Open a few scripts. Notice the problems: inconsistent naming, no structure, hardcoded paths, commented-out code, exploratory scripts mixed with analysis code. This is what the agent will fix.
+Before starting the agent, **look at the files yourself**. Open a few scripts. Notice the problems: inconsistent naming, no structure, hardcoded paths, commented-out code, exploratory scripts mixed with analysis code. This is what the agent will fix — but you need to know what to verify later.
 :::
 
-## Step 2: Create Your Instruction File
+## Step 3: Write the briefing
 
-Copy the CLAUDE.md from Part 3 into the project folder:
+Two ways:
+
+### A. Bootstrap with `/init`
+
+```bash
+claude
+▸ /init
+```
+
+Claude Code writes a first-draft `CLAUDE.md`. Edit it to add the AEA-specific rules from Part 4.
+
+### B. Paste the example from Part 4
 
 ```bash
 nano CLAUDE.md
-# (paste the content from Part 3, save with Ctrl+O, Enter, Ctrl+X)
+# (paste the content from Part 4, save with Ctrl+O, Enter, Ctrl+X)
 ```
 
-If using Gemini or Codex, copy it under the right filename:
-
-```bash
-cp CLAUDE.md GEMINI.md    # for Gemini CLI
-cp CLAUDE.md AGENTS.md    # for Codex CLI
-```
-
-Or use Claude Code's auto-generate feature to bootstrap one:
-
-```bash
-claude /init
-```
-
-## Step 3: Start the Agent with Planning
-
-### Option A: Claude Code
+## Step 4: Start with planning
 
 ```bash
 claude --dangerously-skip-permissions
@@ -903,10 +831,10 @@ claude --dangerously-skip-permissions
 Then type:
 
 ```
-/plan
+▸ /plan
 
-Analyze all files in this project folder. Create a detailed plan to
-reorganize everything into an AER-compliant replication package.
+Analyse all files in this project folder. Create a detailed plan to
+reorganise everything into an AER-compliant replication package.
 The package should follow the structure in CLAUDE.md. Show me the
 plan before you start.
 ```
@@ -914,257 +842,163 @@ plan before you start.
 Review the plan. If it looks good:
 
 ```
-Approved. Please execute the plan.
+▸ Approved. Please execute the plan.
 ```
 
-### Option B: Gemini CLI
-
-```bash
-gemini
-```
-
-Then type:
-
-```
-/plan
-
-Read GEMINI.md and analyze all files in this directory. Create a
-detailed plan to reorganize everything into an AER-compliant
-replication package.
-```
-
-### Option C: Codex CLI
-
-```bash
-codex --full-auto
-```
-
-Then type:
-
-```
-Read AGENTS.md and analyze all files in this directory. Create a
-detailed plan to reorganize everything into an AER-compliant
-replication package. Present the plan and wait for my approval
-before executing.
-```
-
-## Step 4: Watch the Agent Work
+## Step 5: Watch the agent work
 
 The agent will typically:
 
-1. Read all existing scripts to understand what they do
-2. Create the directory structure (`code/`, `data/raw/`, `output/tables/`, `output/figures/`)
-3. Copy data files to `data/raw/`
-4. Refactor each script: clean code, fix paths, add proper output saving
-5. Create `00_setup.R` with all package dependencies
-6. Create `master.R` that sources all scripts in order
-7. Write `README.md` following the AEA template
-8. Create `LICENSE.txt` and `Makefile`
-9. Test by running `master.R`
-10. Fix any errors that come up
+1. Read all existing scripts to understand what they do.
+2. Create the directory structure (`code/`, `data/raw/`, `output/tables/`, `output/figures/`).
+3. Copy data files to `data/raw/`.
+4. Refactor each script: clean code, fix paths, add proper output saving.
+5. Create `00_setup.R` with all package dependencies.
+6. Create `master.R` that sources all scripts in order.
+7. Write `README.md` following the AEA template.
+8. Create `LICENSE.txt` and `Makefile`.
+9. Test by running `master.R`.
+10. Fix any errors that come up.
 
 ::: {.callout-note}
-## This takes 5--15 minutes
-Depending on the model and the agent's approach, this may take a few minutes. Use `--verbose` (Claude Code) to watch the agent's thinking process in real time.
+## This takes 10–30 minutes
+Depending on the model. Use `Ctrl+O` to toggle verbose output and watch the thinking in real time. Check `/cost` every few steps — build cost intuition.
 :::
 
-## Step 5: Review the Results
+## Step 6: Review the results
 
-After the agent finishes, check the output:
+After the agent finishes, check the output **from a clean shell**, not from inside the agent session:
 
 ```bash
-# Check directory structure
-tree replication_package/
+# In a new terminal, inside the container:
+cd /workspace/replication_package
 
-# Check that master.R runs cleanly
-cd replication_package
-Rscript master.R
+# Tree
+ls -R
 
-# Check that tables were produced
+# Clean-session run
+R --vanilla -e 'source("master.R")'
+
+# Verify outputs
 ls output/tables/
-
-# Check that figures were produced
 ls output/figures/
 
 # Read the README
-cat README.md
+head -60 README.md
 ```
 
-## Step 6: Iterate and Improve
+## Step 7: Iterate and improve
 
 The first pass will not be perfect. Use the agent to fix issues:
 
 ```
-The README is missing the computational requirements section.
-Please add it with the correct R version and package list.
+▸ The README is missing the Computational Requirements section.
+  Please add it with the correct R version (run `R --version` to check)
+  and the package list with versions (run packageVersion(...) for each).
 ```
 
 ```
-Table 2 should use clustered standard errors at the session level,
-not heteroskedasticity-robust. Please fix this.
+▸ Table 2 should use clustered standard errors at the session level,
+  not heteroskedasticity-robust. Update 02_main_analysis.R and regenerate.
 ```
 
 ```
-The Makefile target "clean" should also remove the output/tables/
-directory. Please update it.
+▸ The Makefile's `clean` target should also remove output/tables/ and
+  output/figures/. Please update it.
 ```
 
 This iterative refinement is where agents excel. Each fix takes seconds, not minutes.
 
----
-
-# Part 9: Advanced Techniques
-
-## Prompt Engineering for Agents
-
-Good prompts for coding agents follow a **three-part structure**: context, objective, constraints.
-
-| Weak Prompt | Strong Prompt |
-|-------------|---------------|
-| "Clean up this code" | "Refactor `analysis_v2_FINAL.R` into `code/02_main_analysis.R` with relative paths, modelsummary output to `output/tables/`, and heteroskedastic-robust SEs" |
-| "Make a README" | "Write `README.md` following the AEA Social Science Data Editors template. Include all 7 required sections. List every R package with its version number." |
-| "Fix the figures" | "In `code/06_figures.R`, change Figure 1 to use `theme_minimal()`, save as both PDF and PNG at 300 DPI in `output/figures/`" |
-
-**Best practices for prompting:**
-
-- **Be specific and verifiable.** The agent should know exactly what "done" looks like.
-- **Reference files explicitly.** Use `@filename` (Claude Code) or full paths to point the agent at the right context.
-- **Give context before objectives.** "This project replicates Kessler & Roth (2025). The data is in `data/raw/`. Refactor the analysis scripts."
-- **State constraints up front.** "Use only relative paths. Do not install new packages. Output to `output/tables/`."
-- **One task per prompt for complex work.** Don't ask the agent to reorganize AND extend AND debug in one message.
-
-## Context Management
-
-Long sessions will eventually exceed the agent's context window. Each agent handles this differently:
-
-### Claude Code: `/compact`
-
-```
-/compact
-```
-
-The agent summarizes the conversation and continues with a compressed context. You can add instructions to the compaction: `/compact Focus on the regression results and any unresolved errors.`
-
-**Best practice:** Use `/compact` proactively when you notice the conversation is long, rather than waiting for the agent to lose context. Between major subtasks, consider using `/clear` to start fresh (the agent will re-read CLAUDE.md).
-
-### Gemini CLI: `/compress` and the 1M token window
-
-Gemini has a 1 million token context window, so context exhaustion is rarer. When it happens:
-
-```
-/compress
-```
-
-**Best practice:** Gemini's huge context means you can paste entire papers or large datasets directly into the conversation. Take advantage of this.
-
-### Codex CLI: Automatic Checkpointing
-
-Codex CLI automatically checkpoints its state. If it hits a context limit, it resumes from the last checkpoint. No manual intervention needed.
-
-## The "Referee 2" Protocol
-
-A powerful workflow for verifying replication packages, inspired by Scott Cunningham:
-
-1. **Agent 1** builds the replication package (the author)
-2. **Agent 2** reviews the package in a fresh session (the referee)
+## Step 8: Run the referee-2 audit
 
 ```bash
-# Terminal 1: Build the package
-claude --dangerously-skip-permissions
-> (build the replication package)
+# Fresh session, clean context:
+claude
 
-# Terminal 2: Independent audit
-claude --dangerously-skip-permissions
-> You are a referee for the AEA Data Editor. Review the replication
-  package in /workspace/replication_package/. Check:
-  1. Does master.R run without errors from a clean R session?
-  2. Does the README follow the AEA template?
-  3. Are all tables and figures produced?
-  4. Are all packages listed with versions?
-  Report a detailed referee report with pass/fail for each criterion.
+▸ You are a fresh referee for the AEA Data Editor. You have NOT seen
+  this project before. Audit /workspace/replication_package/ against
+  the AEA Social Science Data Editors README template. Specifically:
+  1. List any missing README sections.
+  2. From an empty /tmp/test/ directory, try to reproduce the package:
+     copy the folder, run master.R, confirm every table/figure in the
+     README is produced.
+  3. Are all packages listed with versions?
+  4. Any absolute paths or setwd() calls?
+  5. Any exploratory files left over from the original messy folder?
+  Output a structured referee report with pass/fail for each item.
 ```
 
-This catches issues that the building agent might overlook. The fresh context means the reviewing agent has no bias from the construction process.
+Read the report. Fix what it catches. This is the habit that separates a good replication package from a great one.
 
-::: {.callout-tip}
-## Cross-agent Referee 2
-For maximum robustness, use a **different agent** for the review. Build with Claude Code, review with Gemini CLI (or vice versa). Different models catch different issues.
-:::
+---
 
-## Hooks (Claude Code)
+# Part 9: Advanced techniques
 
-Hooks are shell commands that execute automatically in response to agent events. They let you enforce project rules without relying on the agent to remember them.
+## Opus for planning, Sonnet for execution
 
-Configure hooks in `.claude/settings.json`:
+```bash
+claude --model opus
+▸ /plan
+▸ Analyse /workspace/messy_project and draft a detailed plan for the
+  AER replication package, per CLAUDE.md.
+```
 
-```{.json filename=".claude/settings.json"}
+After approving:
+
+```
+▸ /model sonnet
+▸ Proceed with the plan.
+```
+
+On API, this is the single biggest cost-saver for long refactors. On Max, there's no token cost — but Sonnet is typically faster.
+
+## Subagents for parallel work
+
+```
+▸ Refactor 02_main_analysis.R while a subagent simultaneously refactors
+  03_nok_analysis.R. When both complete, integrate both into master.R.
+```
+
+Claude Code spawns a second agent with its own context. The parent agent re-integrates the results. Use this when subtasks are **genuinely independent** — otherwise you get merge conflicts and no speed-up.
+
+## Hooks for research discipline
+
+Useful hooks for an AER-bound project (`.claude/settings.json`):
+
+```json
 {
   "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": { "tool": "Bash" },
-        "command": "echo 'Running shell command...'"
-      }
-    ],
     "PostToolUse": [
       {
-        "matcher": { "tool": "Write" },
+        "matcher": { "tool": "Write", "path_glob": "code/*.R" },
         "command": "Rscript -e 'lintr::lint(\"$CLAUDE_FILE_PATH\")'"
+      },
+      {
+        "matcher": { "tool": "Write", "path_glob": "data/raw/**" },
+        "command": "echo 'BLOCKED: data/raw/ is read-only'; exit 1"
+      },
+      {
+        "matcher": { "tool": "Write", "path_glob": "**/*.R" },
+        "command": "grep -nE '^setwd|\"/home/|\"C:' \"$CLAUDE_FILE_PATH\" && echo 'WARN: absolute path or setwd()'; true"
+      }
+    ],
+    "Stop": [
+      {
+        "command": "git log --oneline -n 5"
       }
     ]
   }
 }
 ```
 
-**Use cases for researchers:**
+- First hook: lint every R file the agent writes.
+- Second: hard-block writes into `data/raw/`.
+- Third: warn (but don't block) on `setwd()` or absolute paths.
+- Fourth: at end of session, show the last 5 commits.
 
-- Lint R code after every file write
-- Prevent writes to `data/raw/` (enforce data protection)
-- Log all shell commands for reproducibility auditing
-- Auto-format code after edits
+## Using `.claudeignore`
 
-## Multi-Agent Workflow
-
-For ambitious projects, you can run multiple agents:
-
-1. **Agent 1** (Claude Code): Reorganize code and create the replication package
-2. **Agent 2** (Gemini CLI): Review the package for AER compliance and suggest fixes
-3. **Agent 3** (Codex CLI): Run the package in its sandbox to verify it works in isolation
-4. **You**: Final review and submission
-
-This is especially powerful when comparing how different agents approach the same task.
-
-## Creating a Makefile
-
-A good Makefile is the hallmark of a reproducible package:
-
-```{.makefile filename="Makefile"}
-.PHONY: all tables figures clean
-
-all: tables figures
-
-tables: code/00_setup.R code/01_descriptive.R code/02_main_analysis.R \
-        code/03_nok_analysis.R code/04_dmv_analysis.R code/05_robustness.R
-	Rscript code/00_setup.R
-	Rscript code/01_descriptive.R
-	Rscript code/02_main_analysis.R
-	Rscript code/03_nok_analysis.R
-	Rscript code/04_dmv_analysis.R
-	Rscript code/05_robustness.R
-
-figures: code/00_setup.R code/06_figures.R
-	Rscript code/00_setup.R
-	Rscript code/06_figures.R
-
-clean:
-	rm -rf output/tables/* output/figures/*
-```
-
-Ask the agent to create this, or let it generate one automatically as part of the reorganization.
-
-## Using `.claudeignore` / `.geminiignore`
-
-Like `.gitignore`, these files tell the agent to skip certain files and directories. Useful for large projects:
+Like `.gitignore`, this file tells Claude Code to skip certain files. Useful for large projects:
 
 ```{.text filename=".claudeignore"}
 # Skip large data files the agent doesn't need to read
@@ -1176,153 +1010,320 @@ output/
 renv/library/
 ```
 
-This speeds up the agent (fewer files to scan) and prevents it from accidentally modifying data files.
+This speeds up the agent (fewer files in the repo map) and prevents accidental reads of sensitive data.
+
+## Global vs project `CLAUDE.md`
+
+**Global** (`~/.claude/CLAUDE.md`) — house style, cross-project:
+
+```markdown
+# Global preferences
+
+- Prefer tidyverse over base R.
+- Use `fixest::feols` for regressions, not `lm`.
+- Use `here::here()` for paths.
+- Write concise comments only where the "why" is non-obvious.
+```
+
+**Project** (`CLAUDE.md`) — project-specific rules, loaded on top.
+
+Both are loaded and merged. Use this for consistent cross-project behaviour without re-specifying your house style.
 
 ---
 
-# Part 10: Agent Commands Reference
+# Part 10: Troubleshooting
 
-## Claude Code Quick Reference
-
-| Action | Command |
-|--------|---------|
-| Start interactively | `claude` |
-| Use Opus model | `claude --model opus` |
-| Show verbose output | `claude --verbose` or `Ctrl+O` mid-session |
-| Skip all permission prompts | `claude --dangerously-skip-permissions` |
-| Auto-generate CLAUDE.md | `claude /init` |
-| Enter planning mode | `/plan` |
-| Browse commands and skills | Type `/` then browse |
-| Show project insights | `/insights` |
-| Compress conversation | `/compact` |
-| Show cost | `/cost` |
-| Switch model | `/model` |
-| Clear history | `/clear` |
-| Get help | `/help` |
-
-## Gemini CLI Quick Reference
-
-| Action | Command |
-|--------|---------|
-| Start interactively | `gemini` |
-| Sandboxed mode | `gemini -s` |
-| Auto-edit mode | `gemini --approval-mode=auto_edit` |
-| Full autonomy | `gemini --approval-mode=yolo` |
-| Enter planning mode | `/plan` |
-| Add a memory | `/memory add "always use fixest"` |
-| Show memories | `/memory show` |
-| Compress conversation | `/compress` |
-| Non-interactive (pipe) | `echo "prompt" \| gemini` |
-
-## Codex CLI Quick Reference
-
-| Action | Command |
-|--------|---------|
-| Start interactively (suggest mode) | `codex` |
-| Full autonomy | `codex --full-auto` |
-| Choose model | `codex --model gpt-5.3-codex` |
-| Use a profile | `codex --profile econ` |
-| Enter planning mode | `/plan` |
-| Browse commands | Type `/` then browse |
-| Non-interactive | `codex exec "your prompt here"` |
-
-::: {.callout-note}
-## Model context
-**Claude Code** supports models: `opus` (most capable), `sonnet` (balanced), `haiku` (fastest). For today's reorganization task, `sonnet` is a good default. Use `opus` if the agent struggles with complex decisions.
-
-**Gemini CLI** uses the model configured via your API key. The free tier provides access to Gemini Flash and Pro models with daily request limits (check [ai.google.dev](https://ai.google.dev/gemini-api/docs/rate-limits) for current quotas).
-
-**Codex CLI** uses models from the GPT-5 Codex family (e.g., `gpt-5.3-codex`). Configure in `~/.codex/config.toml` or pass `--model`.
-:::
-
----
-
-# Part 11: Troubleshooting
-
-## Common Issues
+## Common issues
 
 | Problem | Solution |
 |---------|----------|
-| Agent asks for permission on every command | Set up `.claude/settings.json` (Part 4) or use `--dangerously-skip-permissions` |
-| Agent takes a wrong approach | Type "stop" or Ctrl+C, then redirect: "Instead of X, please do Y" |
-| Agent runs out of context | Use `/compact` to compress the conversation |
-| R package not installed | Ask the agent: "Install the fixest package" |
-| Agent creates files in wrong location | Be specific in your prompt: "Create `code/01_descriptive.R` in the replication_package directory" |
-| Agent modifies original data files | Add to CLAUDE.md/GEMINI.md/AGENTS.md: "Never modify files in data/raw/" |
-| Gemini CLI does not read GEMINI.md | Ensure the file is in the current working directory when you start `gemini` |
-| Codex CLI cannot access the network | This is by design (sandbox). Install packages beforehand or use `suggest` mode. |
-| Agent generates code that does not run | Let it see the error --- it will debug and fix autonomously |
+| Claude Code asks for permission on every command | Set up `.claude/settings.json` (Part 5) or use `--dangerously-skip-permissions` inside Docker |
+| Agent takes a wrong approach | Ctrl+C to cancel, then "Instead of X, please do Y" — or `Esc Esc` to rewind |
+| Agent runs out of context | `/compact` to compress, or `/clear` to reset (re-reads `CLAUDE.md`) |
+| R package not installed | "Install fixest." Or: `Rscript -e 'install.packages("fixest")'` |
+| Agent creates files in wrong location | Be specific: "Create `code/01_descriptive.R` in `/workspace/replication_package/`" |
+| Agent modifies original data files | Add to `CLAUDE.md`: "Never modify files in `data/raw/`." Add a deny rule to `.claude/settings.json`. |
+| Agent generates code that doesn't run | Approve the run command. It sees the error and debugs. |
+| `authentication failed` | Re-run `claude login` (Max) or re-export `ANTHROPIC_API_KEY` |
+| Rate-limit errors | Wait 30 seconds; or consider the Max plan |
+| Context window exceeded | `/compact` or `/clear` |
 
-## When to Intervene
+## When to intervene
 
 Let the agent work autonomously **unless**:
 
-- It is about to delete original data files
-- It is taking a fundamentally wrong approach (wrong statistical method)
-- It has been stuck in a loop for more than 3 attempts
-- It is making network requests you did not expect
+- It is about to delete original data files.
+- It is taking a fundamentally wrong statistical approach.
+- It has been stuck in a loop for more than 3 attempts on the same error.
+- It is making network requests you did not expect.
+- `/cost` is growing much faster than you expected — stop and look.
 
-## Getting Help
+## Getting help
 
-- Claude Code documentation: [code.claude.com/docs](https://code.claude.com/docs)
-- Gemini CLI documentation: [github.com/google-gemini/gemini-cli](https://github.com/google-gemini/gemini-cli)
-- Codex CLI documentation: [github.com/openai/codex](https://github.com/openai/codex)
-- AEA Data Editor guidance: [aeadataeditor.github.io/aea-de-guidance](https://aeadataeditor.github.io/aea-de-guidance/)
+- Claude Code docs: [code.claude.com/docs](https://code.claude.com/docs)
+- Anthropic Console: [console.anthropic.com](https://console.anthropic.com)
+- AEA Data Editor guidance: [aeadataeditor.github.io](https://aeadataeditor.github.io/aea-de-guidance/)
 - AEA README template: [social-science-data-editors.github.io/template_README](https://social-science-data-editors.github.io/template_README/)
 
 ---
 
-# Part 12: Checklist --- Before You Submit
+# Part 11: Pre-submission checklist
 
-Use this checklist to verify your replication package:
+Use this before you claim the package is done. Better yet, ask the agent:
 
-## Package Structure
+```
+▸ /check-package
+```
+
+## Package structure
 
 - [ ] `README.md` exists in the root directory
 - [ ] `LICENSE.txt` exists
 - [ ] `master.R` or `Makefile` exists
 - [ ] `code/` directory contains all analysis scripts
-- [ ] `data/raw/` contains all data files
+- [ ] `data/raw/` contains all data files, unmodified
 - [ ] `output/tables/` and `output/figures/` contain results
 - [ ] No exploratory or scratch files remain
 
-## README Completeness
+## README completeness
 
 - [ ] Overview section with paper title and summary
 - [ ] Data Availability Statement
-- [ ] Dataset List table
-- [ ] Computational Requirements (software, packages with versions)
-- [ ] Description of Programs (every script listed)
-- [ ] Instructions to Replicators (numbered steps)
-- [ ] Table/Figure to Program mapping
+- [ ] Dataset list table
+- [ ] Computational requirements (software, packages with versions)
+- [ ] Description of programs (every script listed)
+- [ ] Instructions to replicators (numbered steps)
+- [ ] Table/figure to program mapping
 - [ ] References for all data sources
 
-## Code Quality
+## Code quality
 
 - [ ] All paths are relative (no `C:/Users/...` or `/home/user/...`)
 - [ ] `00_setup.R` installs/loads all required packages
 - [ ] `master.R` runs all scripts in the correct order
-- [ ] Code runs without errors from a clean R session
+- [ ] Code runs without errors from a clean R session (`R --vanilla`)
 - [ ] No `install.packages()` calls in analysis scripts (only in `00_setup.R`)
+- [ ] No `setwd()` calls
 - [ ] Commented-out code removed
 - [ ] Random seeds set where applicable (`set.seed()`)
 
 ## Reproducibility
 
-- [ ] `Rscript master.R` completes without errors
+- [ ] `Rscript master.R` completes without errors from `/tmp/test/`
 - [ ] All tables in `output/tables/` match expected results
 - [ ] All figures in `output/figures/` are produced
 - [ ] `make clean && make all` reproduces everything (if Makefile exists)
+- [ ] A referee-2 session (fresh context) passes the audit
 
-::: {.callout-tip}
-## Use the agent to verify!
-Ask the agent to run through this checklist:
+---
+
+# Appendix A: Using other models via Aider + OpenRouter {#aider-openrouter}
+
+Claude Code uses Claude. When you want to try **GPT-5**, **DeepSeek Reasoner**, **Gemini 2.5**, or free-tier models, **Aider + OpenRouter** is the flexible alternative.
+
+This is a fully self-contained setup. You can use it alongside Claude Code (e.g. Claude Code builds, Aider does the referee-2 review on GPT-5), or switch to it entirely for a specific task.
+
+## Why this combination
+
+**Aider** is a terminal coding agent similar to Claude Code:
+
+- Open source, Apache 2.0, Python.
+- `CONVENTIONS.md` plays the same role as `CLAUDE.md`.
+- Git-native: auto-commits every edit, so you can `/undo`.
+- Model-agnostic. Bring any API key.
+
+**OpenRouter** is a single API that routes to ~300 models across providers:
+
+- Anthropic, OpenAI, Google, DeepSeek, Meta, Mistral, Qwen.
+- One key, one bill, passthrough pricing.
+- Zero Data Retention by default.
+- **Per-key spend caps** (your airbag).
+- Free-tier models for warm-ups.
+
+## Setup in ten minutes
+
+### 1. Create the OpenRouter account
+
+Go to [openrouter.ai](https://openrouter.ai), sign up, load **\$5** at [Credits](https://openrouter.ai/credits). About \$0.80 minimum processing fee.
+
+### 2. Create a scoped API key
+
+[Keys → Create Key](https://openrouter.ai/keys). Name it `workshop-aider`. **Set a spend cap** (\$5 whole key, or \$1/day). Copy the key — starts with `sk-or-v1-...`. Shown once.
+
+### 3. Privacy settings
+
+[Settings → Privacy](https://openrouter.ai/settings/privacy):
+
+- **ZDR on** (OpenRouter does not store prompts after forwarding).
+- **Prompt logging off** (unless you want the ~1% discount).
+
+### 4. Enter the container and export
+
+```bash
+docker exec -it econ-replication-agent bash
+export OPENROUTER_API_KEY=sk-or-v1-...
+
+# Sanity check — list available models
+aider --list-models openrouter/ | head
+```
+
+### 5. First run
+
+```bash
+mkdir -p ~/aider-test && cd ~/aider-test
+aider --model openrouter/anthropic/claude-sonnet-4.5
+```
+
+At the Aider prompt:
 
 ```
-Please verify that the replication package meets all AER requirements.
-Go through each item in the checklist and report pass/fail.
+> Hello. What model are you?
+> /cost
+> /tokens
 ```
-:::
+
+`/cost` should show a few fractions of a cent. You're wired up.
+
+## Model cost reference
+
+Approximate pay-as-you-go prices per **1 million** tokens (input / output). Live at [openrouter.ai/models](https://openrouter.ai/models).
+
+| Model | Input | Output | Good for |
+|-------|------:|-------:|---------|
+| `anthropic/claude-sonnet-4.5` | \$3.00 | \$15.00 | Same as Claude Code, routed differently |
+| `anthropic/claude-haiku-4.5` | \$1.00 | \$5.00 | Smaller edits, iteration |
+| `openai/gpt-5.x` | \$2.50 | \$10.00 | Alternative to Sonnet |
+| `google/gemini-2.5-pro` | \$1.25 | \$5.00 | Very large context |
+| `deepseek/deepseek-reasoner` | \$0.55 | \$2.19 | Architect-mode reasoning |
+| `deepseek/deepseek-chat` | \$0.32 | \$0.89 | Warm-ups, small fixes |
+| `qwen/qwen3-coder-480b:free` | \$0.00 | \$0.00 | Free, capable for boilerplate |
+
+## The CONVENTIONS.md is the same CLAUDE.md
+
+```bash
+# From the messy_project directory:
+cp CLAUDE.md CONVENTIONS.md
+```
+
+That's it. Content is identical; Aider reads `CONVENTIONS.md`.
+
+## Aider command cheat sheet
+
+```
+# Launch
+aider                                   start in current folder
+aider file1.R file2.R                   pre-add files
+aider --model openrouter/<prov>/<m>     choose model
+aider --read CONVENTIONS.md             pre-load read-only
+aider --chat-mode architect \
+      --model         <reasoner> \
+      --editor-model  <cheap>           architect + editor split
+aider --message "do X" file.R           one-shot, non-interactive
+aider --yes-always --message "do X"     fully autonomous one-shot
+
+# In chat
+/add <file>            add editable file
+/read <file>           add read-only file
+/drop <file>           remove file
+/diff                  show pending changes
+/undo                  revert last edit plus auto-commit
+/run <cmd>             run shell command, output returns to chat
+/model <name>          switch model mid-session
+/chat-mode {code|ask|architect|help}
+/tokens                context usage
+/cost                  session cost
+/clear                 clear conversation, keep files
+/reset                 clear conversation and drop files
+```
+
+## The architect + editor split
+
+Aider's cost-saver: use a reasoning model to plan, and a cheap model to execute.
+
+```bash
+aider --chat-mode architect \
+      --model         openrouter/deepseek/deepseek-reasoner \
+      --editor-model  openrouter/anthropic/claude-haiku-4.5 \
+      --read CONVENTIONS.md
+```
+
+The reasoner *thinks* about each change; the editor *types* the diff. Typical savings on a long refactor: **40–60%** vs. using Sonnet for everything.
+
+On Claude Code, the equivalent is: `/plan` with `--model opus`, then `/model sonnet` after approval. Architect split doesn't apply directly.
+
+## Running the messy-project task with Aider
+
+```bash
+cd /workspace/messy_project
+cp CLAUDE.md CONVENTIONS.md
+
+aider --model openrouter/anthropic/claude-sonnet-4.5 \
+      --read CONVENTIONS.md
+```
+
+Then:
+
+```
+> Read every R script and every data file header. Draft a detailed plan
+  to reorganise into an AER-compliant replication package per
+  CONVENTIONS.md. Present the plan as a numbered list and wait for my
+  approval before modifying any files.
+```
+
+After approving: `Approved. Execute. Auto-commit each logical step.`
+
+The rest of the workflow (verify, iterate, referee-2) is identical to Claude Code. Just swap `/run Rscript master.R` for approving shell commands in Claude Code.
+
+## Cross-model referee-2
+
+Build with Claude Code, audit with a different model via Aider:
+
+```bash
+# Terminal 1: build with Claude Code
+claude --dangerously-skip-permissions
+
+# Terminal 2: audit with, e.g., GPT-5 via Aider + OpenRouter
+aider --model openrouter/openai/gpt-5 \
+      --read /workspace/replication_package/README.md
+
+> You are a fresh referee for the AEA Data Editor. Audit the package.
+  (... full referee prompt from Part 8 Step 8 ...)
+```
+
+Different providers catch different mistakes. This is the most robust verification you can do short of a human referee.
+
+## Local models for sensitive data
+
+If you can't send data to any cloud model, run locally with `ollama`:
+
+```bash
+# Install ollama (one-time)
+curl -fsSL https://ollama.com/install.sh | sh
+
+# Pull a capable local model
+ollama pull qwen2.5-coder:32b
+
+# Run aider against it
+aider --model ollama/qwen2.5-coder:32b --read CONVENTIONS.md
+```
+
+Quality is lower than Sonnet but **zero network egress**. The right choice for IRB-restricted data on a secure machine.
+
+## Aider vs. Claude Code, at a glance
+
+| | Aider | Claude Code |
+|---|---|---|
+| Instruction file | `CONVENTIONS.md` | `CLAUDE.md` |
+| Licence | Apache 2.0 | Proprietary |
+| Models | Any via OpenRouter / direct | Claude (Opus/Sonnet/Haiku) |
+| Plan mode | Ask in prompt, or `architect` mode | First-class `/plan` |
+| Custom skills | Load a markdown file per session | `.claude/commands/` (versioned) |
+| Hooks | — | `.claude/settings.json` |
+| Permission allow-list | — | `.claude/settings.json` |
+| Git auto-commits | Yes (default) | Manual, or via hooks |
+| Architect + editor split | Yes (built-in) | Use Opus for plan, Sonnet for exec |
+
+**Short version:** if you need the richest harness and are happy with Claude, use Claude Code. If you need to try specific non-Claude models or want auto-commits and the architect split, use Aider + OpenRouter. Both can coexist in the same project (different config files, different branches).
 
 ---
 
@@ -1330,30 +1331,25 @@ Go through each item in the checklist and report pass/fail.
 
 | Term | Definition |
 |------|-----------|
-| **AEA** | American Economic Association --- publisher of the AER, AEJ journals, and others |
-| **AER** | American Economic Review --- the flagship economics journal |
-| **Agent** | An AI system that can plan, execute code, and iterate autonomously |
-| **AGENTS.md** | Markdown instructions file read by Codex CLI, discovered hierarchically |
-| **CLAUDE.md** | Markdown instructions file read automatically by Claude Code on startup |
+| **AEA** | American Economic Association |
+| **AER** | American Economic Review |
+| **Agent** | AI system that can plan, execute code, and iterate autonomously |
+| **Aider** | Open-source terminal coding agent (Appendix A) |
+| **Architect mode** | Aider mode where a reasoning model plans and a cheap editor model writes |
+| **CLAUDE.md** | Markdown instructions file read by Claude Code on startup |
 | **Claude Code** | Anthropic's terminal-native AI coding agent |
-| **Codex CLI** | OpenAI's open-source terminal AI coding agent with OS-level sandboxing |
-| **Container** | A running instance of a Docker image --- an isolated environment |
-| **`/compact`** | Claude Code command to compress conversation and free context space |
-| **Dangerously skip permissions** | Claude Code mode that runs all commands without asking for approval |
-| **DiD** | Difference-in-Differences --- a causal inference method comparing treatment/control groups before/after |
+| **`/compact`** | Claude Code command to compress a long conversation |
+| **Context degradation** | Drop in agent performance as conversation grows long |
+| **Container** | Running instance of a Docker image |
+| **Dangerously skip permissions** | Claude Code mode that runs all commands without asking |
 | **Docker** | Platform for running isolated containers |
-| **`--full-auto`** | Codex CLI flag for full autonomy (all changes applied without asking) |
-| **Gemini CLI** | Google's terminal AI coding agent |
-| **GEMINI.md** | Markdown instructions file read by Gemini CLI on startup |
-| **Hooks** | Shell commands in Claude Code that execute automatically on agent events |
-| **LPM** | Linear Probability Model --- OLS with a binary dependent variable |
-| **Makefile** | Build automation file --- `make all` runs the full pipeline |
-| **Master script** | A single script (`master.R`) that runs all other scripts in order |
+| **Hooks** | Shell commands in Claude Code run automatically on agent events |
+| **Makefile** | Build automation file — `make all` runs the full pipeline |
+| **Master script** | Single script (`master.R`) that runs all others in order |
 | **openICPSR** | Repository where AEA replication packages are deposited |
-| **`/plan`** | Command to enter planning mode (all three agents) |
-| **Referee 2 protocol** | Workflow where a second agent independently audits a replication package |
-| **Replication package** | The complete set of data, code, and documentation needed to reproduce a paper's results |
-| **Sandbox** | Restricted execution environment (Docker, or OS-level in Codex CLI) |
-| **`settings.json`** | Claude Code configuration file for permission allow-lists and hooks |
-| **Skills** | Project-specific custom slash commands in `.claude/skills/` (recommended) or `.claude/commands/` (legacy). They travel with your repo. |
-| **Slash command** | A `/command` in the agent (e.g., `/plan`, `/compact`, `/memory`) --- all three agents support them |
+| **OpenRouter** | API aggregator: one key, ~300 models, per-key spend caps |
+| **`/plan`** | Claude Code planning mode |
+| **Referee 2 protocol** | Fresh-session audit by a second agent of the built package |
+| **Replication package** | Complete set of data, code, documentation to reproduce a paper |
+| **Skills** | Project-specific slash commands in `.claude/commands/` |
+| **ZDR** | Zero Data Retention — OpenRouter policy of not storing prompts |

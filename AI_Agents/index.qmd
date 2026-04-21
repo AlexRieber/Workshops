@@ -1,15 +1,19 @@
 ---
-title: "AI Agents Setup Tutorial"
+title: "AI Agents. Day 2"
 ---
 
-Welcome to the AI Agents setup tutorial. Here you'll find everything you need to get first experience with different AI Agents from the terminal.
+Welcome to the deep-dive **Day 2** workshop. Over about 2–3 hours you'll turn a messy R project into an AER-compliant replication package using **Claude Code**. The handout covers plan mode, custom skills, hooks, permission allow-lists, research best practices (verification, referee-2, data privacy, reproducibility), and the full hands-on exercise.
+
+::: {.callout-tip}
+**New to coding agents?** The [Getting Started with Claude Code](../Getting_Started_Agents/) workshop (Day 1) is the gentler introduction: mental models, the basic interaction loop, and Claude Code setup (Max subscription or API tokens). Day 2 includes a short setup recap so you can follow along either way.
+:::
 
 ## Materials
 
-- [Tutorial](Tutorial/agent-workshop-howto.qmd) — Step-by-step guide to install and use different agents
-- [Slides](Slides/agent-workshop-slides.qmd) — Accompanying slide deck
+- [Tutorial](Tutorial/agent-workshop-howto.qmd). Full Claude Code walkthrough, plus **Appendix A: Using other models via Aider + OpenRouter** for when you need GPT-5, DeepSeek, Gemini, or a free-tier model.
+- [Slides](Slides/agent-workshop-slides.qmd). Accompanying slide deck.
 
 ## About
 
-This tutorial was created for a small workshop on AI Agents in production.
+This workshop was created for a small workshop on AI Agents in production.
 Feel free to open an issue on GitHub if something is unclear.

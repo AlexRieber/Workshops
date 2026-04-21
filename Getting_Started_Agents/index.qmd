@@ -1,0 +1,35 @@
+---
+title: "Getting Started with Claude Code"
+---
+
+Welcome to **Day 1** of the AI Agents workshop. This is the on-ramp: what a coding agent *is*, how to think about it, and how to get your first **Claude Code** session going — either with a **Claude Max** subscription or with **Anthropic API tokens** (pay-as-you-go, around \$5 covers the whole workshop).
+
+If you have never used a coding agent from the terminal before, **start here**. When you're comfortable, move on to the [AI Agents](../AI_Agents/) workshop (Day 2) to turn a messy research folder into an AEA-compliant replication package.
+
+## Materials
+
+- [Tutorial](Tutorial/getting-started-howto.qmd). Step-by-step guide: mental models, both setup paths, first session, the `CLAUDE.md` file, pitfalls, cost management, and a small hands-on exercise.
+- [Slides](Slides/getting-started-slides.qmd). Accompanying slide deck.
+- [TUTOR.md](Tutorial/TUTOR.md). Optional: an instruction file that lets Claude Code walk you through your very first session, interactively.
+
+## What you'll leave with
+
+- **Claude Code** running locally against either Claude Max or an Anthropic API key.
+- A mental model of what a coding agent is and isn't: what it's good at, where it fails, and what remains your job.
+- Four prompt patterns you'll reuse every day: *vague-start*, *scripts-not-commands*, *style-by-reference*, *small-iterations*.
+- A `CLAUDE.md` of your own and a first feel for directing the agent through it.
+- A checklist of pitfalls so you avoid the ones that bite beginners.
+
+## Prerequisites
+
+- Docker container from the [Docker](../Docker/) workshop, up and running. The image bundles Claude Code.
+- Either a **Claude Max** subscription, or a credit card to load **\$5** into an [Anthropic Console](https://console.anthropic.com) account. We set up both paths in the tutorial.
+- Roughly 90 minutes.
+
+## About
+
+This workshop is aimed at **Master's and PhD students in economics** who have used ChatGPT in a browser but have never driven a coding agent from the terminal. It complements Day 2 by starting one step earlier: with how to *think* about agents. It draws on Paul Goldsmith-Pinkham's ["Getting Started with Claude Code"](https://paulgp.substack.com/p/getting-started-with-claude-code) and ["From an empty folder to a figure"](https://paulgp.substack.com/p/from-an-empty-folder-to-a-figure) for the pedagogy, and on the [earendil-works/pi-tutorial](https://github.com/earendil-works/pi-tutorial) for the *agent-as-tutor* pattern shipped as `TUTOR.md`.
+
+Want to try non-Claude models (GPT-5, DeepSeek, Gemini)? The **Day 2 tutorial appendix** has a self-contained setup for **Aider + OpenRouter**: one API key, ~300 models, per-key spend caps.
+
+Feel free to open an issue on GitHub if anything is unclear.

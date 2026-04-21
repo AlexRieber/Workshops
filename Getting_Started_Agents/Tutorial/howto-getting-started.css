@@ -1,0 +1,63 @@
+/* =============================================================================
+   howto-getting-started.css - HTML supplement for Getting Started Workshop
+   ============================================================================= */
+
+/* ---------- code blocks ---------------------------------------------------- */
+pre > code {
+  font-size: 0.88em;
+  line-height: 1.5;
+}
+
+/* ---------- tables --------------------------------------------------------- */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1rem 0;
+  font-size: 0.93em;
+}
+thead th {
+  background: #E6FFFA;
+  color: #234E52;
+  font-weight: 600;
+  padding: 8px 12px;
+  text-align: left;
+  border-bottom: 2px solid #81E6D9;
+}
+tbody td {
+  padding: 6px 12px;
+  border-bottom: 1px solid #E2E8F0;
+}
+tbody tr:hover {
+  background: #F0FFF4;
+}
+
+/* ---------- checklist styling ---------------------------------------------- */
+.task-list-item {
+  list-style-type: none;
+  margin-left: -1.5em;
+}
+.task-list-item input[type="checkbox"] {
+  margin-right: 0.5em;
+}
+
+/* ---------- ladder diagram blocks ----------------------------------------- */
+.ladder-rung {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 14px;
+  margin: 6px 0;
+  border-left: 4px solid #CBD5E0;
+  background: #F7FAFC;
+  border-radius: 0 8px 8px 0;
+}
+.ladder-rung.current {
+  border-left-color: #38B2AC;
+  background: #E6FFFA;
+  font-weight: 600;
+}
+.ladder-rung .level {
+  font-weight: 700;
+  color: #2D3748;
+  min-width: 60px;
+}

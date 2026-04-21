@@ -1,0 +1,1413 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Alexander Rieber (@AlexRieber) · Ulm University">
+<meta name="dcterms.date" content="2026-02-25">
+
+<title>Docker for AI Coding Agents – Workshops about AI Agents</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-8446ea55b1304f2a35eb7b5ea6d7cb94.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Workshops about AI Agents</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../Docker/index.html"> 
+<span class="menu-text">Docker</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../Getting_Started_Agents/index.html"> 
+<span class="menu-text">Getting Started</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../AI_Agents/index.html"> 
+<span class="menu-text">AI Agents</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        
+    <div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="docker-setup-slides.html"><i class="bi bi-file-slides"></i>RevealJS</a></li></ul></div></div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Docker for AI Coding Agents</h1>
+<p class="subtitle lead">A Beginner’s Guide to Safe, Reproducible Environments</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Alexander Rieber (<a href="https://github.com/AlexRieber"><span class="citation" data-cites="AlexRieber">@AlexRieber</span></a>) · Ulm University </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">February 25, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="workshop-overview" class="level2">
+<h2 class="anchored" data-anchor-id="workshop-overview">Workshop Overview</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Part</th>
+<th>Topic</th>
+<th>Time</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>🐳</td>
+<td>What is Docker? Why a Sandbox?</td>
+<td>10 min</td>
+</tr>
+<tr class="even">
+<td>💻</td>
+<td>Installing Docker Desktop</td>
+<td>10 min</td>
+</tr>
+<tr class="odd">
+<td>📦</td>
+<td>Building Your First Image</td>
+<td>15 min</td>
+</tr>
+<tr class="even">
+<td>🏃</td>
+<td>Running Containers &amp; Volumes</td>
+<td>15 min</td>
+</tr>
+<tr class="odd">
+<td>🤖</td>
+<td>Setting Up Claude Code, Codex &amp; Gemini CLI</td>
+<td>15 min</td>
+</tr>
+<tr class="even">
+<td>🔒</td>
+<td>Safety: Partitions &amp; Disk Limits</td>
+<td>10 min</td>
+</tr>
+<tr class="odd">
+<td>🛠️</td>
+<td>Hands-On: Run Your First Agent</td>
+<td>15 min</td>
+</tr>
+</tbody>
+</table>
+<p>Companion handout: <strong>Docker Setup Guide for AI Coding Agents</strong></p>
+</section>
+<section id="part-1-what-is-docker" class="level1" data-background-color="#2D3748">
+<h1 data-background-color="#2D3748">Part 1: What is Docker?</h1>
+<section id="ai-agents-need-to-run-code" class="level2">
+<h2 class="anchored" data-anchor-id="ai-agents-need-to-run-code">AI Agents Need to Run Code</h2>
+<p>An AI coding agent is <strong>not</strong> just a chatbot. It can:</p>
+<ul>
+<li><strong>Read &amp; write</strong> any file it can access</li>
+<li><strong>Run</strong> arbitrary shell commands</li>
+<li><strong>Download</strong> data from the internet</li>
+<li><strong>Install</strong> software packages</li>
+</ul>
+<p>. . .</p>
+<p>Would you let a stranger do all this on <strong>your personal laptop?</strong></p>
+</section>
+<section id="the-solution-a-sandbox" class="level2">
+<h2 class="anchored" data-anchor-id="the-solution-a-sandbox">The Solution: A Sandbox</h2>
+<div style="display: flex; justify-content: center; gap: 50px; align-items: center; margin-top: 20px;">
+
+<div style="background: #FFF5F5; border: 3px solid #FC8181; border-radius: 16px; padding: 25px 30px; width: 340px; text-align: center;">
+<div style="font-size: 2em; margin-bottom: 8px;">😰</div>
+<h3 style="margin: 0 0 8px 0; color: #9B2C2C; font-size: 0.85em;" class="anchored">Without Docker</h3>
+<p style="color: #4A5568; font-size: 0.65em; margin: 0;">Agent runs on your system.<br>Can access everything.<br>Mistakes affect YOU.</p>
+</div>
+
+<div style="font-size: 2em; color: #A0AEC0;">→</div>
+
+<div style="background: #F0FFF4; border: 3px solid #48BB78; border-radius: 16px; padding: 25px 30px; width: 340px; text-align: center;">
+<div style="font-size: 2em; margin-bottom: 8px;">😌</div>
+<h3 style="margin: 0 0 8px 0; color: #276749; font-size: 0.85em;" class="anchored">With Docker</h3>
+<p style="color: #4A5568; font-size: 0.65em; margin: 0;">Agent runs in a container.<br>Cannot escape the sandbox.<br>Your system stays safe.</p>
+</div>
+
+</div>
+<p><strong>Docker</strong> = an isolated mini-computer inside your real computer.</p>
+</section>
+<section id="three-concepts-you-need" class="level2">
+<h2 class="anchored" data-anchor-id="three-concepts-you-need">Three Concepts You Need</h2>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 8px; margin-top: 10px;">
+
+<div style="background: #FEFCBF; border: 2px solid #ECC94B; border-radius: 10px; padding: 12px 30px; width: 550px; display: flex; align-items: center; gap: 15px;">
+<span style="font-size: 1.5em;">📄</span>
+<div>
+<strong style="color: #744210; font-size: 0.85em;">Dockerfile</strong> = Recipe<br>
+<span style="font-size: 0.6em; color: #744210;">"Install R, Python, Claude Code..."</span>
+</div>
+</div>
+
+<div style="color: #A0AEC0; font-size: 0.6em;">↓ <code>docker buildx build</code> (~20--30 min)</div>
+
+<div style="background: #BEE3F8; border: 2px solid #4299E1; border-radius: 10px; padding: 12px 30px; width: 550px; display: flex; align-items: center; gap: 15px;">
+<span style="font-size: 1.5em;">📦</span>
+<div>
+<strong style="color: #2A4365; font-size: 0.85em;">Image</strong> = Frozen Meal<br>
+<span style="font-size: 0.6em; color: #2A4365;">Complete environment snapshot, ready to use</span>
+</div>
+</div>
+
+<div style="color: #A0AEC0; font-size: 0.6em;">↓ <code>docker compose up</code> (~10 sec)</div>
+
+<div style="background: #C6F6D5; border: 2px solid #48BB78; border-radius: 10px; padding: 12px 30px; width: 550px; display: flex; align-items: center; gap: 15px;">
+<span style="font-size: 1.5em;">🏃</span>
+<div>
+<strong style="color: #22543D; font-size: 0.85em;">Container</strong> = Meal on Your Plate<br>
+<span style="font-size: 0.6em; color: #22543D;">A running instance where you work</span>
+</div>
+</div>
+
+</div>
+</section>
+<section id="why-docker-for-ai-agents" class="level2">
+<h2 class="anchored" data-anchor-id="why-docker-for-ai-agents">Why Docker for AI Agents?</h2>
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; max-width: 850px; margin: 10px auto;">
+
+<div style="background: #F7FAFC; border-left: 4px solid #48BB78; padding: 12px 14px; border-radius: 0 8px 8px 0;">
+<strong style="color: #276749; font-size: 0.75em;">🔒 Safety</strong><br>
+<span style="font-size: 0.6em; color: #4A5568;">Agent cannot touch your files or system.</span>
+</div>
+
+<div style="background: #F7FAFC; border-left: 4px solid #4299E1; padding: 12px 14px; border-radius: 0 8px 8px 0;">
+<strong style="color: #2B6CB0; font-size: 0.75em;">🔄 Reproducibility</strong><br>
+<span style="font-size: 0.6em; color: #4A5568;">Everyone gets the exact same environment.</span>
+</div>
+
+<div style="background: #F7FAFC; border-left: 4px solid #ED8936; padding: 12px 14px; border-radius: 0 8px 8px 0;">
+<strong style="color: #9C4221; font-size: 0.75em;">🧹 Easy Cleanup</strong><br>
+<span style="font-size: 0.6em; color: #4A5568;">Delete container = clean system again.</span>
+</div>
+
+<div style="background: #F7FAFC; border-left: 4px solid #9F7AEA; padding: 12px 14px; border-radius: 0 8px 8px 0;">
+<strong style="color: #553C9A; font-size: 0.75em;">📤 Portability</strong><br>
+<span style="font-size: 0.6em; color: #4A5568;">Share Dockerfile = share entire setup.</span>
+</div>
+
+</div>
+</section>
+</section>
+<section id="part-2-installing-docker" class="level1" data-background-color="#2D3748">
+<h1 data-background-color="#2D3748">Part 2: Installing Docker</h1>
+<section id="docker-desktop-is-free-for-education" class="level2">
+<h2 class="anchored" data-anchor-id="docker-desktop-is-free-for-education">Docker Desktop is Free for Education</h2>
+<div style="background: #EBF8FF; border: 2px solid #4299E1; border-radius: 12px; padding: 20px 25px; max-width: 750px; margin: 15px auto;">
+<p style="font-size: 0.75em; color: #2B6CB0; margin: 0;">
+<strong>🎓 Good news:</strong> Docker Desktop is <strong>free for educational use</strong>.<br>
+Students and educators at universities can use it without any licensing concerns.
+</p>
+</div>
+<p>Two options for Windows users:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th></th>
+<th>Docker Desktop</th>
+<th>Docker Engine in WSL 2</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>GUI</strong></td>
+<td>✅ Yes</td>
+<td>❌ CLI only</td>
+</tr>
+<tr class="even">
+<td><strong>Setup</strong></td>
+<td>Easy (installer)</td>
+<td>Moderate (manual)</td>
+</tr>
+<tr class="odd">
+<td><strong>Best for</strong></td>
+<td>Beginners</td>
+<td>Experienced users</td>
+</tr>
+</tbody>
+</table>
+<p>Mac users: Docker Desktop is the standard choice.</p>
+</section>
+<section id="windows-docker-desktop" class="level2">
+<h2 class="anchored" data-anchor-id="windows-docker-desktop">Windows + Docker Desktop</h2>
+<p><strong>Step 1:</strong> Install WSL 2 (PowerShell as Admin)</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>wsl <span class="op">--</span>install</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Restart. Set a Linux username and password.</p>
+<p><strong>Step 2:</strong> Download Docker Desktop from <a href="https://www.docker.com/products/docker-desktop/">docker.com/products/docker-desktop</a></p>
+<p>Run installer, keep defaults, restart if asked.</p>
+<p><strong>Step 3:</strong> Configure Docker Desktop</p>
+<ul>
+<li>Settings → General: ✅ “Use WSL 2 based engine”</li>
+<li>Settings → Resources → WSL Integration: ✅ Ubuntu</li>
+</ul>
+<p><strong>⏱ Total: ~15 min including restarts</strong></p>
+</section>
+<section id="windows-verify-configure" class="level2">
+<h2 class="anchored" data-anchor-id="windows-verify-configure">Windows: Verify &amp; Configure</h2>
+<p><strong>Step 4:</strong> Open <strong>Ubuntu</strong> (NOT PowerShell!) and run:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run hello-world</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>You should see <strong>“Hello from Docker!”</strong></p>
+<p>. . .</p>
+<p><strong>Step 5:</strong> Adjust resources in Docker Desktop → Settings → Resources:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Setting</th>
+<th>Recommended</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>CPUs</td>
+<td>4+</td>
+</tr>
+<tr class="even">
+<td>Memory</td>
+<td>8–16 GB</td>
+</tr>
+<tr class="odd">
+<td>Disk</td>
+<td>60+ GB</td>
+</tr>
+</tbody>
+</table>
+<p>These are upper limits — Docker only uses what it needs.</p>
+</section>
+<section id="mac-step-by-step" class="level2">
+<h2 class="anchored" data-anchor-id="mac-step-by-step">Mac: Step by Step</h2>
+<p><strong>Step 1:</strong> Check your chip (Apple menu → About This Mac)</p>
+<ul>
+<li>M1/M2/M3/M4 = Apple Silicon</li>
+<li>Otherwise = Intel</li>
+</ul>
+<p><strong>Step 2:</strong> Download Docker Desktop from <a href="https://www.docker.com/products/docker-desktop/">docker.com/products/docker-desktop</a></p>
+<p>Choose your chip type. Open <code>.dmg</code>, drag to Applications.</p>
+<p><strong>Step 3:</strong> Open Docker, grant permissions, accept agreement.</p>
+<p><strong>Step 4:</strong> Open Terminal and verify:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run hello-world</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><strong>⏱ Total: ~10 min</strong></p>
+</section>
+<section id="alternative-docker-engine-in-wsl-2-no-desktop" class="level2">
+<h2 class="anchored" data-anchor-id="alternative-docker-engine-in-wsl-2-no-desktop">Alternative: Docker Engine in WSL 2 (No Desktop)</h2>
+<p>For Windows users who prefer a <strong>lightweight, CLI-only</strong> setup:</p>
+<p><strong>Step 1:</strong> Install WSL 2 (same as before: <code>wsl --install</code>, restart)</p>
+<p><strong>Step 2:</strong> Open Ubuntu terminal, install Docker Engine:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add Docker repo + install (full commands in handout)</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt-get update</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt-get install <span class="at">-y</span> docker-ce docker-ce-cli <span class="dt">\</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  containerd.io docker-buildx-plugin docker-compose-plugin</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><strong>Step 3:</strong> Start Docker manually each session:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> service docker start</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><strong>⏱ ~15 min</strong> · Full step-by-step in the handout, Part 2 Option B</p>
+</section>
+<section id="wsl-2-docker-engine-tips" class="level2">
+<h2 class="anchored" data-anchor-id="wsl-2-docker-engine-tips">WSL 2 Docker Engine: Tips</h2>
+<div style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
+
+<div style="background: #F0FFF4; border-left: 4px solid #48BB78; padding: 10px 15px; border-radius: 0 8px 8px 0;">
+<strong style="color: #276749; font-size: 0.75em;">Auto-start Docker daemon</strong><br>
+<code style="font-size: 0.6em;">echo 'sudo service docker start' &gt;&gt; ~/.bashrc</code>
+</div>
+
+<div style="background: #F0FFF4; border-left: 4px solid #48BB78; padding: 10px 15px; border-radius: 0 8px 8px 0;">
+<strong style="color: #276749; font-size: 0.75em;">Run docker without sudo</strong><br>
+<code style="font-size: 0.6em;">sudo usermod -aG docker $USER</code><br>
+<span style="font-size: 0.6em; color: #4A5568;">Then close and re-open your terminal.</span>
+</div>
+
+<div style="background: #EBF8FF; border-left: 4px solid #4299E1; padding: 10px 15px; border-radius: 0 8px 8px 0;">
+<strong style="color: #2B6CB0; font-size: 0.75em;">Everything else stays the same</strong><br>
+<span style="font-size: 0.6em; color: #4A5568;">All <code>docker build</code>, <code>docker compose</code>, and <code>docker run</code> commands work identically — Docker Desktop or Engine in WSL 2.</span>
+</div>
+
+</div>
+</section>
+</section>
+<section id="part-3-building-your-first-image" class="level1" data-background-color="#2D3748">
+<h1 data-background-color="#2D3748">Part 3: Building Your First Image</h1>
+<section id="what-goes-into-the-dockerfile" class="level2">
+<h2 class="anchored" data-anchor-id="what-goes-into-the-dockerfile">What Goes Into the Dockerfile</h2>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 4px; margin-top: 5px;">
+
+<div style="background: #EDF2F7; border: 2px solid #A0AEC0; border-radius: 8px; padding: 6px 25px; width: 600px; text-align: center;">
+<span style="font-size: 0.65em; color: #4A5568;"><strong>Layer 1:</strong> Ubuntu 24.04 base</span>
+</div>
+<div style="color: #A0AEC0; font-size: 0.5em;">+</div>
+
+<div style="background: #EDF2F7; border: 2px solid #A0AEC0; border-radius: 8px; padding: 6px 25px; width: 600px; text-align: center;">
+<span style="font-size: 0.65em; color: #4A5568;"><strong>Layer 2:</strong> System tools (curl, wget, git, LaTeX)</span>
+</div>
+<div style="color: #A0AEC0; font-size: 0.5em;">+</div>
+
+<div style="background: #BEE3F8; border: 2px solid #4299E1; border-radius: 8px; padding: 6px 25px; width: 600px; text-align: center;">
+<span style="font-size: 0.65em; color: #2A4365;"><strong>Layer 3:</strong> R + econometrics packages</span>
+</div>
+<div style="color: #A0AEC0; font-size: 0.5em;">+</div>
+
+<div style="background: #FEFCBF; border: 2px solid #ECC94B; border-radius: 8px; padding: 6px 25px; width: 600px; text-align: center;">
+<span style="font-size: 0.65em; color: #744210;"><strong>Layer 4:</strong> Python + numpy, pandas, matplotlib</span>
+</div>
+<div style="color: #A0AEC0; font-size: 0.5em;">+</div>
+
+<div style="background: #C6F6D5; border: 2px solid #48BB78; border-radius: 8px; padding: 6px 25px; width: 600px; text-align: center;">
+<span style="font-size: 0.65em; color: #22543D;"><strong>Layer 5:</strong> Node.js + Claude Code + Codex + Gemini CLI</span>
+</div>
+
+</div>
+<p>Docker <strong>caches</strong> every layer. Change the last layer only? Rebuild in seconds.</p>
+</section>
+<section id="installing-r" class="level2">
+<h2 class="anchored" data-anchor-id="installing-r">Installing R</h2>
+<div class="sourceCode" id="cb6"><pre class="sourceCode dockerfile code-with-copy"><code class="sourceCode dockerfile"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Install R</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">apt-get</span> update <span class="kw">&amp;&amp;</span> <span class="dt">\</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="ex">apt-get</span> install <span class="at">-y</span> r-base r-base-dev <span class="kw">&amp;&amp;</span> <span class="dt">\</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rm</span> <span class="at">-rf</span> /var/lib/apt/lists/<span class="pp">*</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Install R packages (~10-15 min)</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">Rscript</span> <span class="at">-e</span> <span class="st">"install.packages(c(</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="st">    'tidyverse', 'fixest', 'modelsummary',</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="st">    'haven', 'data.table', 'ggplot2'</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="st">    ), repos='https://cloud.r-project.org', Ncpus=4)"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>R packages are pre-installed in the Dockerfile — you wait once, not every time.</p>
+</section>
+<section id="installing-python-ai-agents-and-stata" class="level2">
+<h2 class="anchored" data-anchor-id="installing-python-ai-agents-and-stata">Installing Python, AI Agents, and Stata?</h2>
+<div class="sourceCode" id="cb7"><pre class="sourceCode dockerfile code-with-copy"><code class="sourceCode dockerfile"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Python</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">apt-get</span> install <span class="at">-y</span> python3 python3-pip</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">pip3</span> install numpy pandas matplotlib</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Node.js (needed for Codex and Gemini CLI)</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">curl</span> <span class="at">-fsSL</span> https://deb.nodesource.com/setup_24.x <span class="kw">|</span> <span class="fu">bash</span> <span class="at">-</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">apt-get</span> install <span class="at">-y</span> nodejs</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Claude Code</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">curl</span> <span class="at">-fsSL</span> https://claude.ai/install.sh <span class="kw">|</span> <span class="fu">bash</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="co"># OpenAI Codex</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">npm</span> install <span class="at">-g</span> @openai/codex</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Google Gemini CLI</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">npm</span> install <span class="at">-g</span> @google/gemini-cli</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>. . .</p>
+<p><strong>Stata</strong> is commercial software. You need a <strong>Linux license</strong> from your university, or use R equivalents (<code>fixest</code>, <code>plm</code>, <code>rdrobust</code>). See the handout.</p>
+</section>
+<section id="customize-it-ask-an-llm" class="level2">
+<h2 class="anchored" data-anchor-id="customize-it-ask-an-llm">Customize It — Ask an LLM!</h2>
+<p>The provided Dockerfile is a <strong>starting point</strong>. Want to add packages or tools?</p>
+<p>. . .</p>
+<p><strong>Paste the Dockerfile into your favourite LLM</strong> and ask:</p>
+<blockquote class="blockquote">
+<p><em>“I need to add the <code>sf</code> and <code>terra</code> R packages for geospatial analysis. How should I modify this Dockerfile?”</em></p>
+</blockquote>
+<p>. . .</p>
+<p>LLMs are excellent at writing and debugging Dockerfiles — they know the right system libraries, dependency chains, and best practices.</p>
+<div style="background: #F0FFF4; border: 1px solid #38A169; border-radius: 8px; padding: 12px 20px; margin-top: 15px; max-width: 550px; margin-left: auto; margin-right: auto;">
+<span style="font-size: 0.7em; color: #276749;">
+<strong>Great way to learn Docker</strong> while getting a setup tailored to your research.
+</span>
+</div>
+</section>
+<section id="building-the-image" class="level2">
+<h2 class="anchored" data-anchor-id="building-the-image">Building the Image</h2>
+<div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/coding-agent-workshop</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> buildx build <span class="at">-t</span> coding-agent .</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>. . .</p>
+<div style="display: flex; gap: 40px; justify-content: center; margin-top: 15px;">
+
+<div style="background: #FFF5F5; border-radius: 8px; padding: 12px 25px; text-align: center;">
+<strong style="color: #9B2C2C; font-size: 0.8em;">First build</strong><br>
+<span style="font-size: 0.7em;">~20--30 min ☕</span>
+</div>
+
+<div style="background: #F0FFF4; border-radius: 8px; padding: 12px 25px; text-align: center;">
+<strong style="color: #276749; font-size: 0.8em;">Rebuild (cached)</strong><br>
+<span style="font-size: 0.7em;">&lt; 10 seconds ⚡</span>
+</div>
+
+</div>
+</section>
+</section>
+<section id="part-4-containers-volumes" class="level1" data-background-color="#2D3748">
+<h1 data-background-color="#2D3748">Part 4: Containers &amp; Volumes</h1>
+<section id="starting-a-container" class="level2">
+<h2 class="anchored" data-anchor-id="starting-a-container">Starting a Container</h2>
+<div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Start in background</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose up <span class="at">-d</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Enter the container</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> exec <span class="at">-it</span> my-agent bash</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div style="background: #272822; color: #A0AEC0; font-family: 'Fira Code', monospace; padding: 16px; border-radius: 8px; font-size: 0.55em; line-height: 1.7; margin-top: 10px;">
+<span style="color: #48BB78;">you@laptop:~$</span> docker exec -it my-agent bash<br>
+<span style="color: #48BB78;">root@a1b2c3d4:/home/agent#</span> R --version | head -1<br>
+<span style="color: white;">R version 4.4.1 (2024-06-14)</span> ✓<br>
+<span style="color: #48BB78;">root@a1b2c3d4:/home/agent#</span> claude --version<br>
+<span style="color: white;">Claude Code v2.x.x</span> ✓<br>
+<span style="color: #48BB78;">root@a1b2c3d4:/home/agent#</span> gemini --version<br>
+<span style="color: white;">Gemini CLI v0.x.x</span> ✓<br>
+<span style="color: #48BB78;">root@a1b2c3d4:/home/agent#</span> exit<br>
+<span style="color: #48BB78;">you@laptop:~$</span> <span style="opacity: 0.5;">← back on host</span>
+</div>
+</section>
+<section id="volume-mounts-host-container" class="level2">
+<h2 class="anchored" data-anchor-id="volume-mounts-host-container">Volume Mounts: Host ↔︎ Container</h2>
+<div style="display: grid; grid-template-columns: 1fr 60px 1fr; gap: 5px; align-items: center; max-width: 850px; margin: 10px auto;">
+
+<div style="background: #EBF8FF; border: 2px solid #4299E1; border-radius: 10px; padding: 12px;">
+<strong style="color: #2B6CB0; font-size: 0.7em;">💻 Your Computer</strong>
+<pre style="font-size: 0.5em; margin: 5px 0 0 0; background: none; color: #2A4365; padding: 0; box-shadow: none; line-height: 1.5;">~/project/
+  workspace/    ← shared
+  output/       ← shared
+  CLAUDE.md     ← shared (read-only)
+  my-photos/    ← NOT shared
+  passwords.txt ← NOT shared</pre>
+</div>
+
+<div style="text-align: center;">
+<span style="font-size: 1.2em;">🔗</span>
+</div>
+
+<div style="background: #F0FFF4; border: 2px solid #48BB78; border-radius: 10px; padding: 12px;">
+<strong style="color: #276749; font-size: 0.7em;">🐳 Container</strong>
+<pre style="font-size: 0.5em; margin: 5px 0 0 0; background: none; color: #22543D; padding: 0; box-shadow: none; line-height: 1.5;">/home/agent/
+  project/   ← agent works here
+  output/    ← results go here
+  CLAUDE.md  ← agent reads this
+
+  (everything else is
+   invisible to the agent)</pre>
+</div>
+
+</div>
+<p><strong>Only explicitly mounted folders are visible.</strong> Everything else stays private.</p>
+</section>
+<section id="the-docker-compose.yml" class="level2">
+<h2 class="anchored" data-anchor-id="the-docker-compose.yml">The docker-compose.yml</h2>
+<div class="sourceCode" id="cb10"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">services</span><span class="kw">:</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">agent</span><span class="kw">:</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">image</span><span class="kw">:</span><span class="at"> coding-agent</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">container_name</span><span class="kw">:</span><span class="at"> my-agent</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">stdin_open</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">tty</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">mem_limit</span><span class="kw">:</span><span class="at"> 16g</span><span class="co">            # Max RAM</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">cpus</span><span class="kw">:</span><span class="at"> </span><span class="dv">4</span><span class="co">                   # Max CPU cores</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">pids_limit</span><span class="kw">:</span><span class="at"> </span><span class="dv">512</span><span class="co">           # Max processes</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">volumes</span><span class="kw">:</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> ./workspace:/home/agent/project</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> ./output:/home/agent/output</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> ./CLAUDE.md:/home/agent/CLAUDE.md:ro</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> agent-auth:/root/.claude</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="fu">volumes</span><span class="kw">:</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">agent-auth</span><span class="kw">:</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+</section>
+<section id="part-5-ai-coding-agents-three-options" class="level1" data-background-color="#2D3748">
+<h1 data-background-color="#2D3748">Part 5: AI Coding Agents (Three Options)</h1>
+<section id="claude-code-option-a-api-key" class="level2">
+<h2 class="anchored" data-anchor-id="claude-code-option-a-api-key">Claude Code: Option A — API Key</h2>
+<p><strong>Pay per use.</strong> You control spending via the API dashboard.</p>
+<ol type="1">
+<li>Go to <a href="https://platform.claude.com/">platform.claude.com</a></li>
+<li>Create account → “API Keys” → “Create Key”</li>
+<li>Add $5–10 billing credit</li>
+</ol>
+<div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Inside the container:</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">ANTHROPIC_API_KEY</span><span class="op">=</span><span class="st">"sk-ant-your-key-here"</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The key starts with <code>sk-ant-...</code> — save it somewhere safe.</p>
+</section>
+<section id="claude-code-option-b-max-subscription" class="level2">
+<h2 class="anchored" data-anchor-id="claude-code-option-b-max-subscription">Claude Code: Option B — Max Subscription</h2>
+<p><strong>Flat monthly fee.</strong> No per-token charges.</p>
+<p>Subscribe at <a href="https://claude.ai/">claude.ai</a> (Pro $20/mo, Max $100–200/mo)</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Inside the container:</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div style="background: #272822; color: #A0AEC0; font-family: 'Fira Code', monospace; padding: 14px; border-radius: 8px; font-size: 0.5em; line-height: 1.7; margin-top: 8px;">
+<span style="color: #ECC94B;">⚠ Authentication required</span><br>
+<span style="color: white;">To sign in, open this URL in your browser:</span><br>
+<span style="color: #63B3ED; text-decoration: underline;">https://claude.ai/login?code=ABCD-1234-EFGH</span><br><br>
+<span style="color: #718096;">Waiting for authentication...</span><br>
+<span style="color: #48BB78;">✓ Authenticated successfully!</span>
+</div>
+<p>Copy URL → open in browser → log in → done. <strong>Saved in Docker volume.</strong></p>
+</section>
+<section id="openai-codex" class="level2">
+<h2 class="anchored" data-anchor-id="openai-codex">OpenAI Codex</h2>
+<p>Open source (Apache 2.0) — <a href="https://github.com/openai/codex">github.com/openai/codex</a></p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Inside the container:</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">OPENAI_API_KEY</span><span class="op">=</span><span class="st">"sk-your-key-here"</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="ex">codex</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Get a key at <a href="https://platform.openai.com/">platform.openai.com</a> → API Keys</p>
+<p>. . .</p>
+<p>For non-interactive use:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="ex">codex</span> exec <span class="st">"fix the failing tests"</span> <span class="at">--full-auto</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Inside Docker, use <code>--sandbox danger-full-access</code> — the container IS your sandbox.</p>
+</section>
+<section id="google-gemini-cli" class="level2">
+<h2 class="anchored" data-anchor-id="google-gemini-cli">Google Gemini CLI</h2>
+<p>Open source (Apache 2.0) — <a href="https://github.com/google-gemini/gemini-cli">github.com/google-gemini/gemini-cli</a></p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Inside the container:</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">GEMINI_API_KEY</span><span class="op">=</span><span class="st">"your-key-here"</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="ex">gemini</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Get a key at <a href="https://aistudio.google.com/">aistudio.google.com</a> → API Keys</p>
+<p>. . .</p>
+<p>Or use for free with your personal Google account (60 req/min):</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gemini</span>          <span class="co"># Browser login on first run</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="verify-everything-works" class="level2">
+<h2 class="anchored" data-anchor-id="verify-everything-works">Verify Everything Works</h2>
+<div style="background: #272822; color: #A0AEC0; font-family: 'Fira Code', monospace; padding: 16px; border-radius: 8px; font-size: 0.55em; line-height: 1.8;">
+<span style="color: #48BB78;">root@container:~#</span> R --version | head -1<br>
+<span style="color: white;">R version 4.4.1 (2024-06-14)</span> <span style="color: #48BB78;">✓</span><br>
+<span style="color: #48BB78;">root@container:~#</span> python3 --version<br>
+<span style="color: white;">Python 3.10.12</span> <span style="color: #48BB78;">✓</span><br>
+<span style="color: #48BB78;">root@container:~#</span> claude --version<br>
+<span style="color: white;">Claude Code v2.x.x</span> <span style="color: #48BB78;">✓</span><br>
+<span style="color: #48BB78;">root@container:~#</span> codex --version<br>
+<span style="color: white;">0.104.0</span> <span style="color: #48BB78;">✓</span><br>
+<span style="color: #48BB78;">root@container:~#</span> gemini --version<br>
+<span style="color: white;">Gemini CLI v0.x.x</span> <span style="color: #48BB78;">✓</span>
+</div>
+<p>. . .</p>
+<p>Now start working:</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span> <span class="at">--verbose</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+</section>
+<section id="part-6-safety" class="level1" data-background-color="#2D3748">
+<h1 data-background-color="#2D3748">Part 6: Safety</h1>
+<section id="the-risk-filling-up-your-disk" class="level2">
+<h2 class="anchored" data-anchor-id="the-risk-filling-up-your-disk">The Risk: Filling Up Your Disk</h2>
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 800px; margin: 15px auto;">
+
+<div style="background: #FFF5F5; border-radius: 10px; padding: 16px; border: 2px solid #FC8181;">
+<h3 style="margin: 0 0 8px 0; color: #9B2C2C; font-size: 0.75em;" class="anchored">😱 Without limits</h3>
+<p style="font-size: 0.6em; color: #4A5568; margin: 0;">Agent downloads 100 GB.<br>System drive fills up.<br>Computer freezes. Bad day.</p>
+</div>
+
+<div style="background: #F0FFF4; border-radius: 10px; padding: 16px; border: 2px solid #48BB78;">
+<h3 style="margin: 0 0 8px 0; color: #276749; font-size: 0.75em;" class="anchored">😌 With a disk limit</h3>
+<p style="font-size: 0.6em; color: #4A5568; margin: 0;">Agent hits 30 GB limit.<br>"No space left on device".<br>Your system is fine.</p>
+</div>
+
+</div>
+<p><strong>Solution:</strong> Give Docker its own storage area with a hard size cap.</p>
+</section>
+<section id="three-levels-of-protection" class="level2">
+<h2 class="anchored" data-anchor-id="three-levels-of-protection">Three Levels of Protection</h2>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 8px; margin-top: 10px;">
+
+<div style="background: #F0FFF4; border: 2px solid #48BB78; border-radius: 10px; padding: 10px 25px; width: 650px; display: flex; justify-content: space-between; align-items: center;">
+<div>
+<strong style="color: #276749; font-size: 0.7em;">Option A: Move Docker Storage to Another Drive</strong><br>
+<span style="font-size: 0.55em; color: #4A5568;">Settings → Resources → Disk image location (Mac) or WSL export/import (Win)</span>
+</div>
+<span style="background: #C6F6D5; color: #22543D; padding: 3px 10px; border-radius: 15px; font-size: 0.5em; font-weight: bold;">Easy</span>
+</div>
+
+<div style="background: #EBF8FF; border: 2px solid #4299E1; border-radius: 10px; padding: 10px 25px; width: 650px; display: flex; justify-content: space-between; align-items: center;">
+<div>
+<strong style="color: #2B6CB0; font-size: 0.7em;">Option B: Dedicated Disk Image for Docker</strong><br>
+<span style="font-size: 0.55em; color: #4A5568;">Fixed-size virtual disk (e.g., 60 GB) — hard cap on all Docker storage</span>
+</div>
+<span style="background: #FEFCBF; color: #744210; padding: 3px 10px; border-radius: 15px; font-size: 0.5em; font-weight: bold;">Advanced</span>
+</div>
+
+<div style="background: #FEFCBF; border: 2px solid #ECC94B; border-radius: 10px; padding: 10px 25px; width: 650px; display: flex; justify-content: space-between; align-items: center;">
+<div>
+<strong style="color: #744210; font-size: 0.7em;">Option C: Size-Limited Workspace Folder</strong><br>
+<span style="font-size: 0.55em; color: #4A5568;">Create a 30 GB disk image, mount as workspace volume</span>
+</div>
+<span style="background: #BEE3F8; color: #2A4365; padding: 3px 10px; border-radius: 15px; font-size: 0.5em; font-weight: bold;">Medium</span>
+</div>
+
+</div>
+<p><strong>Workshop recommendation:</strong> Option A is sufficient. See handout Part 14 for Options B &amp; C.</p>
+</section>
+<section id="option-c-size-limited-workspace" class="level2">
+<h2 class="anchored" data-anchor-id="option-c-size-limited-workspace">Option C: Size-Limited Workspace</h2>
+<p><strong>Mac:</strong></p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="ex">hdiutil</span> create <span class="at">-size</span> 30g <span class="at">-fs</span> APFS <span class="at">-volname</span> AgentWorkspace <span class="dt">\</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-type</span> SPARSE ~/agent_workspace.sparseimage</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="ex">hdiutil</span> attach ~/agent_workspace.sparseimage</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Use /Volumes/AgentWorkspace in docker-compose.yml</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><strong>Windows (WSL):</strong></p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dd</span> if=/dev/zero of=~/agent_workspace.img bs=1M count=30720</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="ex">mkfs.ext4</span> ~/agent_workspace.img</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/project/workspace</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> mount <span class="at">-o</span> loop ~/agent_workspace.img ~/project/workspace</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Agent fills up the 30 GB? It stops. <strong>Your system stays safe.</strong></p>
+</section>
+<section id="option-a-move-docker-to-a-separate-drive" class="level2">
+<h2 class="anchored" data-anchor-id="option-a-move-docker-to-a-separate-drive">Option A: Move Docker to a Separate Drive</h2>
+<p><strong>Mac:</strong> Docker Desktop → Settings → Resources → Disk image location → Browse → select external drive. Done.</p>
+<p><strong>Windows (PowerShell as Admin):</strong></p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>wsl <span class="op">--</span>shutdown</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>wsl <span class="op">--</span>export docker-desktop-data D<span class="op">:</span>\DockerData\backup<span class="op">.</span><span class="fu">tar</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>wsl <span class="op">--</span>unregister docker-desktop-data</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>wsl <span class="op">--</span>import docker-desktop-data D<span class="op">:</span>\DockerData \</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    D<span class="op">:</span>\DockerData\backup<span class="op">.</span><span class="fu">tar</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="fu">del</span> D<span class="op">:</span>\DockerData\backup<span class="op">.</span><span class="fu">tar</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>All Docker data now lives on <code>D:\</code>. Your <code>C:\</code> drive is protected.</p>
+</section>
+<section id="safety-summary" class="level2">
+<h2 class="anchored" data-anchor-id="safety-summary">Safety Summary</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Layer</th>
+<th>Protects Against</th>
+<th>Effort</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Docker container</td>
+<td>Agent escaping to your system</td>
+<td>Built-in</td>
+</tr>
+<tr class="even">
+<td>Resource limits</td>
+<td>RAM/CPU exhaustion</td>
+<td>Easy</td>
+</tr>
+<tr class="odd">
+<td>Volume mounts</td>
+<td>Unwanted file access</td>
+<td>Easy</td>
+</tr>
+<tr class="even">
+<td>Read-only (<code>:ro</code>)</td>
+<td>Config file modification</td>
+<td>Easy</td>
+</tr>
+<tr class="odd">
+<td>Option A: Separate drive</td>
+<td>Filling your system drive</td>
+<td>Easy</td>
+</tr>
+<tr class="even">
+<td>Option B: Dedicated disk image</td>
+<td>All Docker storage</td>
+<td>Advanced</td>
+</tr>
+<tr class="odd">
+<td>Option C: Limited workspace</td>
+<td>Data explosion</td>
+<td>Medium</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="part-7-hands-on" class="level1" data-background-color="#2D3748">
+<h1 data-background-color="#2D3748">Part 7: Hands-On</h1>
+<section id="quick-start-9-steps" class="level2">
+<h2 class="anchored" data-anchor-id="quick-start-9-steps">Quick Start: 9 Steps</h2>
+<ol type="1">
+<li><strong>Install</strong> Docker Desktop (~10 min)</li>
+<li><strong>Create</strong> project folder: <code>mkdir -p ~/coding-agent-workshop</code></li>
+<li><strong>Create</strong> <code>Dockerfile</code> (copy from handout Part 9)</li>
+<li><strong>Create</strong> <code>docker-compose.yml</code> (copy from handout Part 5)</li>
+<li><strong>Build</strong> the image: <code>docker buildx build -t coding-agent .</code></li>
+<li><strong>Start</strong> the container: <code>docker compose up -d</code></li>
+<li><strong>Enter</strong> the container: <code>docker exec -it my-agent bash</code></li>
+<li><strong>Authenticate</strong> your AI agent(s) (API key or subscription)</li>
+<li><strong>Start working:</strong> <code>claude</code>, <code>codex</code>, or <code>gemini</code></li>
+</ol>
+<p>See the handout for detailed instructions at each step.</p>
+</section>
+<section id="try-it-give-the-agent-a-task" class="level2">
+<h2 class="anchored" data-anchor-id="try-it-give-the-agent-a-task">Try It: Give the Agent a Task</h2>
+<div class="sourceCode" id="cb21"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> exec <span class="at">-it</span> my-agent bash</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span> <span class="at">--verbose</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Then type:</p>
+<blockquote class="blockquote">
+<p>Write an R script that loads the mtcars dataset, runs a regression of mpg on wt and hp, and saves a nice ggplot to output/regression_plot.pdf</p>
+</blockquote>
+<p>Watch it <strong>plan</strong>, <strong>write code</strong>, <strong>run it</strong>, <strong>see errors</strong>, <strong>fix them</strong>, and produce output.</p>
+</section>
+<section id="compare-all-three-agents" class="level2">
+<h2 class="anchored" data-anchor-id="compare-all-three-agents">Compare All Three Agents</h2>
+<div class="sourceCode" id="cb22"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Claude Code</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span> <span class="at">-p</span> <span class="st">"Analyze mtcars: regression of mpg~wt+hp, save plot"</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="co"># OpenAI Codex</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="ex">codex</span> exec <span class="st">"Analyze mtcars: regression of mpg~wt+hp, save plot"</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Google Gemini CLI</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a><span class="ex">gemini</span> <span class="at">-p</span> <span class="st">"Analyze mtcars: regression of mpg~wt+hp, save plot"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Check <code>output/</code> on your host for results!</p>
+<p>. . .</p>
+<p>All three agents can:</p>
+<ul>
+<li>Read and write files</li>
+<li>Run R, Python, bash commands</li>
+<li>Install packages if needed</li>
+<li>Iterate on errors automatically</li>
+</ul>
+</section>
+<section id="cheat-sheet" class="level2">
+<h2 class="anchored" data-anchor-id="cheat-sheet">Cheat Sheet</h2>
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; max-width: 850px; margin: 5px auto;">
+<div style="background: #F7FAFC; border-radius: 10px; padding: 12px;">
+<strong style="font-size: 0.7em;">🐳 Docker</strong>
+<pre style="font-size: 0.48em; margin: 5px 0 0 0; padding: 8px; line-height: 1.5;">docker compose up -d          # Start
+docker exec -it my-agent bash # Enter
+docker compose down           # Stop
+docker ps                     # List
+docker stats my-agent         # Monitor</pre>
+</div>
+
+<div style="background: #F7FAFC; border-radius: 10px; padding: 12px;">
+<strong style="font-size: 0.7em;">🤖 Inside Container</strong>
+<pre style="font-size: 0.48em; margin: 5px 0 0 0; padding: 8px; line-height: 1.5;">claude                  # Claude Code
+claude --model opus     # Opus model
+codex                   # OpenAI Codex
+gemini                  # Gemini CLI
+R / Rscript script.R    # Run R
+python3                 # Run Python</pre>
+</div>
+</div>
+</section>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<div style="max-width: 750px; margin: 10px auto; display: grid; grid-template-columns: auto 1fr; gap: 8px 15px; align-items: center; font-size: 0.75em;">
+
+<div style="font-size: 1.2em;">🐳</div>
+<div><strong>Docker = Safety.</strong> Container is a sandbox. Agent cannot touch your system.</div>
+
+<div style="font-size: 1.2em;">📄</div>
+<div><strong>Dockerfile = Recipe.</strong> R, Python, Claude Code, Codex, Gemini CLI --- all in one file.</div>
+
+<div style="font-size: 1.2em;">🔗</div>
+<div><strong>Volumes = Bridges.</strong> Only mounted folders are visible. Everything else is private.</div>
+
+<div style="font-size: 1.2em;">🔒</div>
+<div><strong>Limits protect you.</strong> RAM, CPU, disk caps keep your laptop responsive.</div>
+
+<div style="font-size: 1.2em;">🤖</div>
+<div><strong>Three agents, one container.</strong> Claude Code + Codex + Gemini CLI side by side.</div>
+
+</div>
+</section>
+<section id="resources" class="level2">
+<h2 class="anchored" data-anchor-id="resources">Resources</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Resource</th>
+<th>Link</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Workshop Materials</strong></td>
+<td><a href="https://github.com/AlexRieber/Workshops/tree/main/Docker"><strong>github.com/AlexRieber/Workshops/Docker</strong></a></td>
+</tr>
+<tr class="even">
+<td>Docker Desktop</td>
+<td><a href="https://www.docker.com/products/docker-desktop/">docker.com/products/docker-desktop</a></td>
+</tr>
+<tr class="odd">
+<td>Claude Code Docs</td>
+<td><a href="https://code.claude.com/docs/en/overview">code.claude.com/docs</a></td>
+</tr>
+<tr class="even">
+<td>Anthropic API Keys</td>
+<td><a href="https://platform.claude.com/">platform.claude.com</a></td>
+</tr>
+<tr class="odd">
+<td>OpenAI Codex</td>
+<td><a href="https://github.com/openai/codex">github.com/openai/codex</a></td>
+</tr>
+<tr class="even">
+<td>OpenAI API Keys</td>
+<td><a href="https://platform.openai.com/">platform.openai.com</a></td>
+</tr>
+<tr class="odd">
+<td>Google Gemini CLI</td>
+<td><a href="https://github.com/google-gemini/gemini-cli">github.com/google-gemini/gemini-cli</a></td>
+</tr>
+<tr class="even">
+<td>Google AI Studio</td>
+<td><a href="https://aistudio.google.com/">aistudio.google.com</a></td>
+</tr>
+</tbody>
+</table>
+<div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 12px; max-width: 450px; margin: 15px auto; text-align: center;">
+<p style="margin: 0; font-size: 0.85em; font-weight: bold;">Questions? Let's set up your first container!</p>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
